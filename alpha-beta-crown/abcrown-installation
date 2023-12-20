@@ -1,1 +1,55 @@
-ss
+mkdir abc_tmp
+cd abc_tmp/
+git clone --recursive https://github.com/Verified-Intelligence/alpha-beta-CROWN.git
+pip3 install tqdm
+pip3 install pandas
+
+pip3 install torch torchvision torchaudio
+curl --output anaconda.sh https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh
+sha256sum anaconda.sh
+bash anaconda.sh
+source ~/.bashrc
+conda --version
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+
+pip3 install numpy
+pip3 install tensorflow
+pip3 install torch
+
+git clone https://github.com/ChristopherBrix/vnncomp2023_benchmarks.git
+python3 maxpool_to_relu.py 
+apt install sortedcontainers>=2.4
+pip3 install sortedcontainers>=2.4
+pip3 install onnx==1.9.0
+pip3 install pandas==1.2
+
+cd alpha-beta-CROWN/cd complete_verifier/
+python3 abcrown.py 
+pip install https://github.com/KaidiXu/onnx2pytorch.git
+git clone https://github.com/KaidiXu/onnx2pytorch.git
+python3 abcrown.py
+pip3 install onnxruntime==1.16.3
+pip3 install onnxsim==0.4.35
+pip3 install skl2onnx==1.15.0
+pip3 install termcolor==2.3.0
+pip3 install onnxoptimizer==0.3.13
+pip3 install gurobipy==11.0.0
+pip3 install psutil==5.9.5
+pip3 install pyyaml==6.0.1
+pip3 install sortedcontainers==2.4.0
+
+cd alpha-beta-CROWN
+conda deactivate; conda env remove --name alpha-beta-crown
+conda env create -f complete_verifier/environment.yaml --name alpha-beta-crown
+conda env create -f ./alpha-beta-CROWN/complete_verifier/environment.yaml --name alpha-beta-crown
+conda activate alpha-beta-crown
+locate cifar_resnet_2b.yaml
+cd alpha-beta-CROWN/complete_verifier/
+python abcrown.py --config exp_configs/cifar_resnet_2b.yaml 
+
+#RuntimeError: No CUDA GPUs are available
+#Because it is a VM, with no dedicated GPU, I will switch to use the CPU of the host machine using following command:
+python abcrown.py --config exp_configs/cifar_resnet_2b.yaml --device cpu
+
+#Result: safe incomplete in 3.5271 seconds
