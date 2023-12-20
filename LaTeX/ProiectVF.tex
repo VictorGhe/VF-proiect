@@ -1,0 +1,49 @@
+
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+%Information to be included in the title page:
+
+\begin{document}
+
+\title{Vision Transformer (ViT)}
+\author{Kramer Roxana, Miruna Sapca, Marian Ostate, Victor Gherghel}
+\institute{West University of Timisoara, Faculty of Mathematics and Computer Science}
+\maketitle
+           % typeset the header of the contribution
+\date{}
+\begin{abstract}
+    
+\end{abstract}
+
+
+
+\section{Introduction}
+\small{Vision Transformer (ViT) is a groundbreaking deep learning architecture that has revolutionized computer vision tasks, departing from traditional convolutional neural networks (CNNs). Introduced by researchers at Google in 2020, ViT leverages the power of transformers, originally designed for natural language processing, to process image data in a highly efficient and scalable manner.}
+\begin{center}
+\includegraphics[scale=0.3]{poza1.jpg}
+\end{center}
+\newpage
+The structure of the vision transformer architecture consists of the following steps: 
+
+\begin{enumerate} 
+    \item Split an image into patches (fixed sizes)
+    \item Flatten the image patches
+    \item Create lower-dimensional linear embeddings from these flattened image patches
+    \item Include positional embeddings
+    \item Feed the sequence as an input to a state-of-the-art transformer encoder
+    \item Pre-train the ViT model with image labels, which is then fully supervised on a big dataset
+    \item Fine-tune the downstream dataset for image classification
+\end{enumerate}
+\begin{center}
+\begin{figure}[h]
+\includegraphics[scale=0.8]{poza2.png}
+\caption{Vision Transformer ViT Architecture}
+\end{figure}
+\end{center}
+
+
+
+
+
+
+\end{document}
