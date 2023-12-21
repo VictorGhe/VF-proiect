@@ -47,6 +47,7 @@ conda deactivate; conda env remove --name alpha-beta-crown
 conda env create -f complete_verifier/environment.yaml --name alpha-beta-crown
 conda env create -f ./alpha-beta-CROWN/complete_verifier/environment.yaml --name alpha-beta-crown
 conda activate alpha-beta-crown
+conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
 locate cifar_resnet_2b.yaml
 cd alpha-beta-CROWN/complete_verifier/
 python abcrown.py --config exp_configs/cifar_resnet_2b.yaml 
@@ -54,6 +55,10 @@ python abcrown.py --config exp_configs/cifar_resnet_2b.yaml
 Solution: moved the cifar_resnet_2b.yaml file in exp_configs directory
 
 #RuntimeError: No CUDA GPUs are available
+#Try - which did not resolved the issue: sudo apt install nvidia-cuda-toolkit
+check that it got installed: nvcc --version
+pip3 install torch torchvision torchaudio -f https://download.pytorch.org/whl/cu113/torch_stable.html
+
 #Solution: Because it is a VM, with no dedicated GPU, I will switch to use the CPU of the host machine using following command:
 python abcrown.py --config exp_configs/cifar_resnet_2b.yaml --device cpu
 
