@@ -1,24 +1,31 @@
 
 \documentclass[runningheads]{llncs}
 \usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{hyperref}
 %Information to be included in the title page:
 
 \begin{document}
 
 \title{Vision Transformer (ViT)}
-\author{Kramer Roxana, Miruna Sapca, Marian Ostate, Victor Gherghel}
+\author{Roxana Kramer, Miruna Sapca, Marian Ostate, Victor Gherghel}
 \institute{West University of Timisoara, Faculty of Mathematics and Computer Science}
+\date{}
 \maketitle
            % typeset the header of the contribution
-\date{}
+
+
 \begin{abstract}
-    
+    We choosed the Vision Transformer (ViT) model for our  project, drawn to its innovative approach and promising capabilities. Our decision to choose ViT comes from a convergence of factors that align perfectly with the distinctive requirements and targets of our project. 
+    The big interest and ongoing support within the research community for ViT helped us with making our project decision. This ensures that we are working with a model backed by many collective knowledge.
+    In summary, our choice of ViT is influnced by a colection of its unique features and adaptability to project requirements.
 \end{abstract}
 
 
 
-\section{Introduction}
-\small{Vision Transformer (ViT) is a groundbreaking deep learning architecture that has revolutionized computer vision tasks, departing from traditional convolutional neural networks (CNNs). Introduced by researchers at Google in 2020, ViT leverages the power of transformers, originally designed for natural language processing, to process image data in a highly efficient and scalable manner.}
+\section{Benchmark}
+Vision Transformer (ViT) is a groundbreaking deep learning architecture that has revolutionized computer vision tasks, departing from traditional convolutional neural networks (CNNs). Introduced by researchers at Google in 2020, ViT leverages the power of transformers, originally designed for natural language processing, to process image data in a highly efficient and scalable manner.
+\vspace{10mm}
 \begin{center}
 \includegraphics[scale=0.3]{poza1.jpg}
 \end{center}
@@ -41,8 +48,26 @@ The structure of the vision transformer architecture consists of the following s
 \end{figure}
 \end{center}
 
+\section{Tools}
 
+\subsection{alpha-beta-CROWN}
+\vspace{5mm}
+$\alpha,\beta -$CROWN functions as a neural network verifier employing a streamlined linear bound propagation framework and branch-and-bound techniques. Its computational efficiency is enhanced when deployed on GPUs, allowing effective scaling to sizable convolutional networks with millions of parameters. The alpha-beta-CROWN method is capable of offering provable assurances of robustness against adversarial attacks while also verifying other general properties inherent in neural networks.
 
+\subsection{PyRat}
+
+\newpage
+\begin{thebibliography}{9}
+\bibitem{}
+Benchmark: \url{https://github.com/ChristopherBrix/vnncomp2023_benchmarks/tree/main/benchmarks/vit}
+
+\bibitem{}
+Tool 1: \url{https://github.com/Verified-Intelligence/alpha-beta-CROWN}
+\bibitem{}
+Tool 2: \url{https://github.com/ChristopherBrix/vnncomp2023_results/tree/main/pyrat}
+\bibitem{}
+\url{https://viso.ai/deep-learning/vision-transformer-vit/?fbclid=IwAR1lTOAfng_T7diBYAgxWzjSKSpHhNLDBpXwawuCIfRWoP5IMZD1Ufd3GCc}
+\end{thebibliography}
 
 
 
