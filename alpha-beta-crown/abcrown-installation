@@ -19,6 +19,9 @@ pip3 install torch
 
 git clone https://github.com/ChristopherBrix/vnncomp2023_benchmarks.git
 python3 maxpool_to_relu.py 
+#ModuleNotFoundError: No module named 'dnnv'
+Solution: !pip install git+https://github.com/dlshriver/DNNV.git@develop
+
 apt install sortedcontainers>=2.4
 pip3 install sortedcontainers>=2.4
 pip3 install onnx==1.9.0
@@ -47,9 +50,11 @@ conda activate alpha-beta-crown
 locate cifar_resnet_2b.yaml
 cd alpha-beta-CROWN/complete_verifier/
 python abcrown.py --config exp_configs/cifar_resnet_2b.yaml 
+#Error: FileNotFoundError: [Errno 2] No such file or directory: 'exp_configs/cifar_resnet_2b.yaml'
+Solution: moved the cifar_resnet_2b.yaml file in exp_configs directory
 
 #RuntimeError: No CUDA GPUs are available
-#Because it is a VM, with no dedicated GPU, I will switch to use the CPU of the host machine using following command:
+#Solution: Because it is a VM, with no dedicated GPU, I will switch to use the CPU of the host machine using following command:
 python abcrown.py --config exp_configs/cifar_resnet_2b.yaml --device cpu
 
 #Result: safe incomplete in 3.5271 seconds
