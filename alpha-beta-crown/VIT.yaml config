@@ -1,0 +1,8 @@
+cd /abc_tmp/alpha-beta-CROWN/complete_verifier/exp_configs/vnncomp23
+To activate environment use: conda activate alpha-beta-crown
+python abcrown.py --config ./exp_configs/vnncomp23/vit.yaml --device cpu (because the error with No CUDA GPUs persisted)
+
+#Multiple errors encountered such as: pbd_2_2_16_241.vnnlib or pbd_2_2_16_639.vnnlib or pbd_2_2_16_1159.vnnlib- file not found in /abc_tmp/vnncomp2023_benchmarks/benchmarks/vit/vnnlib directory
+Solution: Extracting all the vnnlib.gz files using gzip -d <filename> in the same directory and the onnx.gz files using gzip -d <filename> in the same directory
+
+Retrying the python abcrown.py --config ./exp_configs/vnncomp23/vit.yaml --device cpu command which this time worked
