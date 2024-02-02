@@ -1,0 +1,1408 @@
+Configurations:
+
+general:
+  device: cpu
+  seed: 100
+  conv_mode: matrix
+  deterministic: false
+  double_fp: false
+  loss_reduction_func: min
+  sparse_alpha: false
+  sparse_interm: false
+  save_adv_example: false
+  eval_adv_example: false
+  show_adv_example: false
+  precompile_jit: false
+  complete_verifier: bab
+  enable_incomplete_verification: true
+  csv_name: instances.csv
+  results_file: out.txt
+  root_path: ../../vnncomp2023_benchmarks/benchmarks/vit
+  deterministic_opt: false
+  graph_optimizer: 'Customized("custom_graph_optimizer", "default_optimizer")'
+  no_batchdim_buffers: true
+  save_output: false
+  output_file: out.pkl
+model:
+  name: null
+  path: null
+  onnx_path: null
+  onnx_path_prefix: ''
+  cache_onnx_conversion: false
+  debug_onnx: false
+  onnx_quirks: null
+  input_shape: null
+  onnx_loader: default_onnx_and_vnnlib_loader
+  onnx_optimization_flags: none
+  onnx_vnnlib_joint_optimization_flags: none
+  check_optmized: false
+  flatten_final_output: false
+  optimize_graph: null
+data:
+  start: 0
+  end: 10000
+  select_instance: null
+  num_outputs: 10
+  mean: 0.0
+  std: 1.0
+  pkl_path: null
+  dataset: null
+  data_filter_path: null
+  data_idx_file: null
+specification:
+  type: lp
+  robustness_type: verified-acc
+  norm: .inf
+  epsilon: null
+  epsilon_min: 0.0
+  vnnlib_path: null
+  vnnlib_path_prefix: ''
+  rhs_offset: null
+solver:
+  batch_size: 50
+  auto_enlarge_batch_size: false
+  min_batch_size_ratio: 0.0
+  use_float64_in_last_iteration: false
+  early_stop_patience: 10
+  start_save_best: 0.5
+  bound_prop_method: alpha-crown
+  init_bound_prop_method: same
+  prune_after_crown: false
+  crown:
+    batch_size: 1000000000
+    max_crown_size: 1000000000
+  alpha-crown:
+    alpha: true
+    lr_alpha: 0.1
+    iteration: 20
+    share_alphas: false
+    lr_decay: 0.98
+    full_conv_alpha: true
+    max_coeff_mul: .inf
+    matmul_share_alphas: true
+    apply_output_constraints_to: []
+    disable_optimization: [Exp]
+  beta-crown:
+    lr_alpha: 0.01
+    lr_beta: 0.05
+    lr_decay: 0.98
+    optimizer: adam
+    iteration: 10
+    beta: true
+    beta_warmup: true
+    enable_opt_interm_bounds: false
+    all_node_split_LP: false
+  forward:
+    refine: false
+    dynamic: false
+    max_dim: 10000
+  multi_class:
+    label_batch_size: 32
+    skip_with_refined_bound: true
+  mip:
+    parallel_solvers: null
+    solver_threads: 1
+    refine_neuron_timeout: 15
+    refine_neuron_time_percentage: 0.8
+    early_stop: true
+    adv_warmup: true
+    mip_solver: gurobi
+    skip_unsafe: false
+bab:
+  initial_max_domains: 1
+  max_domains: .inf
+  decision_thresh: 0
+  timeout: 360
+  timeout_scale: 1
+  override_timeout: null
+  get_upper_bound: false
+  dfs_percent: 0.0
+  pruning_in_iteration: false
+  pruning_in_iteration_ratio: 0.2
+  sort_targets: false
+  batched_domain_list: true
+  optimized_interm: ''
+  interm_transfer: true
+  recompute_interm: false
+  sort_domain_interval: -1
+  vanilla_crown: false
+  cut:
+    enabled: false
+    implication: false
+    bab_cut: false
+    lp_cut: false
+    method: null
+    lr: 0.01
+    lr_decay: 1.0
+    iteration: 100
+    bab_iteration: -1
+    early_stop_patience: -1
+    lr_beta: 0.02
+    number_cuts: 50
+    topk_cuts_in_filter: 1000
+    batch_size_primal: 100
+    max_num: 1000000000
+    patches_cut: false
+    cplex_cuts: false
+    cplex_cuts_wait: 0
+    cplex_cuts_revpickup: true
+    cut_reference_bounds: true
+    fix_intermediate_bounds: false
+  branching:
+    method: nonlinear
+    candidates: 3
+    reduceop: min
+    enable_intermediate_bound_opt: false
+    branching_input_and_activation: false
+    branching_input_and_activation_order: [input, relu]
+    branching_input_iterations: 30
+    branching_relu_iterations: 50
+    sb_coeff_thresh: 0.001
+    nonlinear_split:
+      method: shortcut
+      branching_point_method: uniform
+      num_branches: 2
+      branching_point_refinement: false
+      filter: false
+      filter_beta: false
+      filter_batch_size: 10000
+      filter_iterations: 25
+      shortlist_size: 500
+      loose_tanh_threshold: null
+    new_input_split:
+      enable: false
+      batch_size: 2
+      rounds: 1
+      init_alpha_batch_size: 8192
+      full_alpha: false
+    input_split:
+      enable: false
+      enhanced_bound_prop_method: alpha-crown
+      enhanced_branching_method: naive
+      enhanced_bound_patience: 100000000.0
+      attack_patience: 100000000.0
+      adv_check: 0
+      split_partitions: 2
+      sb_margin_weight: 1.0
+      sb_primary_spec: null
+      sb_primary_spec_iter: 1
+      sb_sum: false
+      bf_backup_thresh: -1
+      bf_rhs_offset: 0
+      bf_zero_crossing_score: false
+      ibp_enhancement: false
+      catch_assertion: false
+      compare_with_old_bounds: false
+      update_rhs_with_attack: false
+  attack:
+    enabled: false
+    beam_candidates: 8
+    beam_depth: 7
+    max_dive_fix_ratio: 0.8
+    min_local_free_ratio: 0.2
+    mip_start_iteration: 5
+    mip_timeout: 30.0
+    adv_pool_threshold: null
+    refined_mip_attacker: false
+    refined_batch_size: null
+attack:
+  pgd_order: skip
+  pgd_steps: 100
+  pgd_restarts: 30
+  pgd_batch_size: 100000000
+  pgd_early_stop: true
+  pgd_lr_decay: 0.99
+  pgd_alpha: auto
+  pgd_loss_mode: null
+  enable_mip_attack: false
+  adv_saver: default_adv_saver
+  early_stop_condition: default_early_stop_condition
+  adv_example_finalizer: default_adv_example_finalizer
+  pgd_loss: default_pgd_loss
+  cex_path: ./test_cex.txt
+  attack_mode: PGD
+  attack_tolerance: 0.0
+  attack_func: attack_with_general_specs
+  gama_lambda: 10.0
+  gama_decay: 0.9
+  check_clean: false
+  input_split:
+    pgd_steps: 100
+    pgd_restarts: 30
+    pgd_alpha: auto
+  input_split_enhanced:
+    pgd_steps: 200
+    pgd_restarts: 500000
+    pgd_alpha: auto
+  input_split_check_adv:
+    pgd_steps: 5
+    pgd_restarts: 5
+    pgd_alpha: auto
+    max_num_domains: 10
+debug:
+  view_model: false
+  lp_test: null
+  rescale_vnnlib_ptb: null
+  test_optimized_bounds: false
+  test_optimized_bounds_after_n_iterations: 0
+
+Experiments at Wed Jan 17 11:50:59 2024 on mikeVM
+no customized start/end sample, testing all samples in instances.csv
+Internal results will be saved to out.txt.
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% idx: 0, vnnlib ID: 0 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Using onnx onnx/pgd_2_3_16.onnx
+Using vnnlib vnnlib/pgd_2_3_16_4021.vnnlib
+Precompiled vnnlib file found at ../../vnncomp2023_benchmarks/benchmarks/vit/vnnlib/pgd_2_3_16_4021.vnnlib.compiled
+Loading onnx ../../vnncomp2023_benchmarks/benchmarks/vit/onnx/pgd_2_3_16.onnx wih quirks {}
+Model: BoundedModule(
+  (/input.1): BoundInput(name=/input.1, inputs=[], perturbed=True)
+  (/1): BoundBuffers(name=/1, inputs=[], perturbed=False)
+  (/2): BoundBuffers(name=/2, inputs=[], perturbed=False)
+  (/51): BoundBuffers(name=/51, inputs=[], perturbed=False)
+  (/52): BoundParams(name=/52, inputs=[], perturbed=False)
+  (/53): BoundParams(name=/53, inputs=[], perturbed=False)
+  (/54): BoundBuffers(name=/54, inputs=[], perturbed=False)
+  (/55): BoundBuffers(name=/55, inputs=[], perturbed=False)
+  (/56): BoundBuffers(name=/56, inputs=[], perturbed=False)
+  (/57): BoundBuffers(name=/57, inputs=[], perturbed=False)
+  (/58): BoundParams(name=/58, inputs=[], perturbed=False)
+  (/59): BoundParams(name=/59, inputs=[], perturbed=False)
+  (/60): BoundBuffers(name=/60, inputs=[], perturbed=False)
+  (/61): BoundBuffers(name=/61, inputs=[], perturbed=False)
+  (/63): BoundBuffers(name=/63, inputs=[], perturbed=False)
+  (/64): BoundParams(name=/64, inputs=[], perturbed=False)
+  (/65): BoundParams(name=/65, inputs=[], perturbed=False)
+  (/66): BoundParams(name=/66, inputs=[], perturbed=False)
+  (/67): BoundParams(name=/67, inputs=[], perturbed=False)
+  (/68): BoundParams(name=/68, inputs=[], perturbed=False)
+  (/69): BoundParams(name=/69, inputs=[], perturbed=False)
+  (/70): BoundBuffers(name=/70, inputs=[], perturbed=False)
+  (/71): BoundBuffers(name=/71, inputs=[], perturbed=False)
+  (/72): BoundBuffers(name=/72, inputs=[], perturbed=False)
+  (/73): BoundBuffers(name=/73, inputs=[], perturbed=False)
+  (/74): BoundBuffers(name=/74, inputs=[], perturbed=False)
+  (/75): BoundBuffers(name=/75, inputs=[], perturbed=False)
+  (/76): BoundBuffers(name=/76, inputs=[], perturbed=False)
+  (/77): BoundBuffers(name=/77, inputs=[], perturbed=False)
+  (/78): BoundBuffers(name=/78, inputs=[], perturbed=False)
+  (/79): BoundBuffers(name=/79, inputs=[], perturbed=False)
+  (/80): BoundBuffers(name=/80, inputs=[], perturbed=False)
+  (/81): BoundBuffers(name=/81, inputs=[], perturbed=False)
+  (/82): BoundParams(name=/82, inputs=[], perturbed=False)
+  (/83): BoundParams(name=/83, inputs=[], perturbed=False)
+  (/84): BoundParams(name=/84, inputs=[], perturbed=False)
+  (/85): BoundParams(name=/85, inputs=[], perturbed=False)
+  (/86): BoundBuffers(name=/86, inputs=[], perturbed=False)
+  (/87): BoundBuffers(name=/87, inputs=[], perturbed=False)
+  (/89): BoundParams(name=/89, inputs=[], perturbed=False)
+  (/90): BoundParams(name=/90, inputs=[], perturbed=False)
+  (/91): BoundParams(name=/91, inputs=[], perturbed=False)
+  (/92): BoundParams(name=/92, inputs=[], perturbed=False)
+  (/93): BoundParams(name=/93, inputs=[], perturbed=False)
+  (/94): BoundParams(name=/94, inputs=[], perturbed=False)
+  (/95): BoundBuffers(name=/95, inputs=[], perturbed=False)
+  (/96): BoundBuffers(name=/96, inputs=[], perturbed=False)
+  (/98): BoundBuffers(name=/98, inputs=[], perturbed=False)
+  (/99): BoundParams(name=/99, inputs=[], perturbed=False)
+  (/100): BoundParams(name=/100, inputs=[], perturbed=False)
+  (/101): BoundParams(name=/101, inputs=[], perturbed=False)
+  (/102): BoundParams(name=/102, inputs=[], perturbed=False)
+  (/103): BoundParams(name=/103, inputs=[], perturbed=False)
+  (/104): BoundParams(name=/104, inputs=[], perturbed=False)
+  (/105): BoundBuffers(name=/105, inputs=[], perturbed=False)
+  (/106): BoundBuffers(name=/106, inputs=[], perturbed=False)
+  (/107): BoundBuffers(name=/107, inputs=[], perturbed=False)
+  (/108): BoundBuffers(name=/108, inputs=[], perturbed=False)
+  (/109): BoundBuffers(name=/109, inputs=[], perturbed=False)
+  (/110): BoundBuffers(name=/110, inputs=[], perturbed=False)
+  (/111): BoundBuffers(name=/111, inputs=[], perturbed=False)
+  (/112): BoundBuffers(name=/112, inputs=[], perturbed=False)
+  (/113): BoundBuffers(name=/113, inputs=[], perturbed=False)
+  (/114): BoundBuffers(name=/114, inputs=[], perturbed=False)
+  (/115): BoundBuffers(name=/115, inputs=[], perturbed=False)
+  (/116): BoundBuffers(name=/116, inputs=[], perturbed=False)
+  (/117): BoundParams(name=/117, inputs=[], perturbed=False)
+  (/118): BoundParams(name=/118, inputs=[], perturbed=False)
+  (/119): BoundParams(name=/119, inputs=[], perturbed=False)
+  (/120): BoundParams(name=/120, inputs=[], perturbed=False)
+  (/121): BoundBuffers(name=/121, inputs=[], perturbed=False)
+  (/122): BoundBuffers(name=/122, inputs=[], perturbed=False)
+  (/124): BoundParams(name=/124, inputs=[], perturbed=False)
+  (/125): BoundParams(name=/125, inputs=[], perturbed=False)
+  (/126): BoundParams(name=/126, inputs=[], perturbed=False)
+  (/127): BoundParams(name=/127, inputs=[], perturbed=False)
+  (/128): BoundParams(name=/128, inputs=[], perturbed=False)
+  (/129): BoundParams(name=/129, inputs=[], perturbed=False)
+  (/130): BoundBuffers(name=/130, inputs=[], perturbed=False)
+  (/131): BoundBuffers(name=/131, inputs=[], perturbed=False)
+  (/133): BoundParams(name=/133, inputs=[], perturbed=False)
+  (/134): BoundParams(name=/134, inputs=[], perturbed=False)
+  (/135): BoundConstant(name=/135, inputs=[], perturbed=False)
+  (/136): BoundCast(name=/136, inputs=[/51], perturbed=False)
+  (/137): BoundConstant(name=/137, value=tensor([1]))
+  (/138): BoundReshape(name=/138, inputs=[/136, /137], perturbed=False)
+  (/139): BoundGather(name=/139, inputs=[/135, /138], perturbed=False)
+  (/140): BoundSqueeze(name=/140, inputs=[/139], perturbed=False)
+  (/141): BoundConv(name=/141, inputs=[/input.1, /52, /53], perturbed=True)
+  (/142): BoundConstant(name=/142, inputs=[], perturbed=False)
+  (/shape): BoundConcat(name=/shape, inputs=[/142, /54], perturbed=False)
+  (/144): BoundSplit(name=/144, inputs=[/shape], perturbed=False)
+  (/145): BoundSplit(name=/145, inputs=[/shape], perturbed=False)
+  (/146): BoundSplit(name=/146, inputs=[/shape], perturbed=False)
+  (/147): BoundSqueeze(name=/147, inputs=[/144], perturbed=False)
+  (/148): BoundSqueeze(name=/148, inputs=[/145], perturbed=False)
+  (/149): BoundSqueeze(name=/149, inputs=[/146], perturbed=False)
+  (/150): BoundUnsqueeze(name=/150, inputs=[/147], perturbed=False)
+  (/151): BoundUnsqueeze(name=/151, inputs=[/148], perturbed=False)
+  (/152): BoundUnsqueeze(name=/152, inputs=[/149], perturbed=False)
+  (/153): BoundConcat(name=/153, inputs=[/150, /151, /152], perturbed=False)
+  (/154): BoundReshape(name=/154, inputs=[/141, /153], perturbed=True)
+  (/155): BoundTranspose(name=/155, inputs=[/154], perturbed=True)
+  (/156): BoundUnsqueeze(name=/156, inputs=[/140], perturbed=False)
+  (/shape.3): BoundConcat(name=/shape.3, inputs=[/156, /55, /56], perturbed=False)
+  (/158): BoundSplit(name=/158, inputs=[/shape.3], perturbed=False)
+  (/159): BoundSplit(name=/159, inputs=[/shape.3], perturbed=False)
+  (/160): BoundSplit(name=/160, inputs=[/shape.3], perturbed=False)
+  (/161): BoundSqueeze(name=/161, inputs=[/158], perturbed=False)
+  (/162): BoundSqueeze(name=/162, inputs=[/159], perturbed=False)
+  (/163): BoundSqueeze(name=/163, inputs=[/160], perturbed=False)
+  (/164): BoundUnsqueeze(name=/164, inputs=[/161], perturbed=False)
+  (/165): BoundUnsqueeze(name=/165, inputs=[/162], perturbed=False)
+  (/166): BoundUnsqueeze(name=/166, inputs=[/163], perturbed=False)
+  (/167): BoundConcat(name=/167, inputs=[/164, /165, /166], perturbed=False)
+  (/168): BoundConstant(name=/168, value=tensor([-1]))
+  (/169): BoundReshape(name=/169, inputs=[/167, /168], perturbed=False)
+  (/170): BoundShape(name=/170, inputs=[/169], perturbed=False)
+  (/171): BoundConstantOfShape(name=/171, inputs=[/170], perturbed=False)
+  (/172): BoundConstant(name=/172, value=-1)
+  (/173): BoundMul(name=/173, inputs=[/171, /172], perturbed=False)
+  (/174): BoundEqual(name=/174, inputs=[/169, /173], perturbed=False)
+  (/175): BoundWhere(name=/175, inputs=[/174, /171, /169], perturbed=False)
+  (/176): BoundExpand(name=/176, inputs=[/57, /175], perturbed=False)
+  (/177): BoundCast(name=/177, inputs=[/176], perturbed=False)
+  (/178): BoundAdd(name=/178, inputs=[/177, /1], perturbed=False)
+  (/179): BoundConcat(name=/179, inputs=[/178, /155], perturbed=True)
+  (/180): BoundAdd(name=/180, inputs=[/179, /2], perturbed=True)
+  (/input): BoundTranspose(name=/input, inputs=[/180], perturbed=True)
+  (/182): BoundBatchNormalization(name=/182, inputs=[/input, /58, /59, /60, /61], perturbed=True)
+  (/183): BoundTranspose(name=/183, inputs=[/182], perturbed=True)
+  (/184): BoundConstant(name=/184, inputs=[], perturbed=False)
+  (/185): BoundCast(name=/185, inputs=[/63], perturbed=False)
+  (/186): BoundConstant(name=/186, value=tensor([1]))
+  (/187): BoundReshape(name=/187, inputs=[/185, /186], perturbed=False)
+  (/188): BoundGather(name=/188, inputs=[/184, /187], perturbed=False)
+  (/189): BoundSqueeze(name=/189, inputs=[/188], perturbed=False)
+  (/190): BoundTranspose(name=/190, inputs=[/64], perturbed=False)
+  (/191): BoundMatMul(name=/191, inputs=[/183, /190], perturbed=True)
+  (/192): BoundAdd(name=/192, inputs=[/65, /191], perturbed=True)
+  (/193): BoundTranspose(name=/193, inputs=[/66], perturbed=False)
+  (/194): BoundMatMul(name=/194, inputs=[/183, /193], perturbed=True)
+  (/195): BoundAdd(name=/195, inputs=[/67, /194], perturbed=True)
+  (/196): BoundTranspose(name=/196, inputs=[/68], perturbed=False)
+  (/197): BoundMatMul(name=/197, inputs=[/183, /196], perturbed=True)
+  (/198): BoundAdd(name=/198, inputs=[/69, /197], perturbed=True)
+  (/199): BoundUnsqueeze(name=/199, inputs=[/189], perturbed=False)
+  (/shape.7): BoundConcat(name=/shape.7, inputs=[/199, /70, /71, /72], perturbed=False)
+  (/shape.11): BoundConcat(name=/shape.11, inputs=[/199, /73, /74, /75], perturbed=False)
+  (/shape.15): BoundConcat(name=/shape.15, inputs=[/199, /76, /77, /78], perturbed=False)
+  (/203): BoundSplit(name=/203, inputs=[/shape.7], perturbed=False)
+  (/204): BoundSplit(name=/204, inputs=[/shape.7], perturbed=False)
+  (/205): BoundSplit(name=/205, inputs=[/shape.7], perturbed=False)
+  (/206): BoundSplit(name=/206, inputs=[/shape.7], perturbed=False)
+  (/207): BoundSqueeze(name=/207, inputs=[/203], perturbed=False)
+  (/208): BoundSqueeze(name=/208, inputs=[/204], perturbed=False)
+  (/209): BoundSqueeze(name=/209, inputs=[/205], perturbed=False)
+  (/210): BoundSqueeze(name=/210, inputs=[/206], perturbed=False)
+  (/211): BoundUnsqueeze(name=/211, inputs=[/207], perturbed=False)
+  (/212): BoundUnsqueeze(name=/212, inputs=[/208], perturbed=False)
+  (/213): BoundUnsqueeze(name=/213, inputs=[/209], perturbed=False)
+  (/214): BoundUnsqueeze(name=/214, inputs=[/210], perturbed=False)
+  (/215): BoundConcat(name=/215, inputs=[/211, /212, /213, /214], perturbed=False)
+  (/216): BoundReshape(name=/216, inputs=[/192, /215], perturbed=True)
+  (/217): BoundTranspose(name=/217, inputs=[/216], perturbed=True)
+  (/218): BoundSplit(name=/218, inputs=[/shape.11], perturbed=False)
+  (/219): BoundSplit(name=/219, inputs=[/shape.11], perturbed=False)
+  (/220): BoundSplit(name=/220, inputs=[/shape.11], perturbed=False)
+  (/221): BoundSplit(name=/221, inputs=[/shape.11], perturbed=False)
+  (/222): BoundSqueeze(name=/222, inputs=[/218], perturbed=False)
+  (/223): BoundSqueeze(name=/223, inputs=[/219], perturbed=False)
+  (/224): BoundSqueeze(name=/224, inputs=[/220], perturbed=False)
+  (/225): BoundSqueeze(name=/225, inputs=[/221], perturbed=False)
+  (/226): BoundUnsqueeze(name=/226, inputs=[/222], perturbed=False)
+  (/227): BoundUnsqueeze(name=/227, inputs=[/223], perturbed=False)
+  (/228): BoundUnsqueeze(name=/228, inputs=[/224], perturbed=False)
+  (/229): BoundUnsqueeze(name=/229, inputs=[/225], perturbed=False)
+  (/230): BoundConcat(name=/230, inputs=[/226, /227, /228, /229], perturbed=False)
+  (/231): BoundReshape(name=/231, inputs=[/195, /230], perturbed=True)
+  (/232): BoundSplit(name=/232, inputs=[/shape.15], perturbed=False)
+  (/233): BoundSplit(name=/233, inputs=[/shape.15], perturbed=False)
+  (/234): BoundSplit(name=/234, inputs=[/shape.15], perturbed=False)
+  (/235): BoundSplit(name=/235, inputs=[/shape.15], perturbed=False)
+  (/236): BoundSqueeze(name=/236, inputs=[/232], perturbed=False)
+  (/237): BoundSqueeze(name=/237, inputs=[/233], perturbed=False)
+  (/238): BoundSqueeze(name=/238, inputs=[/234], perturbed=False)
+  (/239): BoundSqueeze(name=/239, inputs=[/235], perturbed=False)
+  (/240): BoundUnsqueeze(name=/240, inputs=[/236], perturbed=False)
+  (/241): BoundUnsqueeze(name=/241, inputs=[/237], perturbed=False)
+  (/242): BoundUnsqueeze(name=/242, inputs=[/238], perturbed=False)
+  (/243): BoundUnsqueeze(name=/243, inputs=[/239], perturbed=False)
+  (/244): BoundConcat(name=/244, inputs=[/240, /241, /242, /243], perturbed=False)
+  (/245): BoundReshape(name=/245, inputs=[/198, /244], perturbed=True)
+  (/246): BoundTranspose(name=/246, inputs=[/245], perturbed=True)
+  (/247): BoundTranspose(name=/247, inputs=[/231], perturbed=True)
+  (/248): BoundMatMul(name=/248, inputs=[/217, /247], perturbed=True)
+  (/input.4): BoundMul(name=/input.4, inputs=[/248, /79], perturbed=True)
+  (/251): BoundMatMul(name=/251, inputs=[/250/mul, /246], perturbed=True)
+  (/252): BoundTranspose(name=/252, inputs=[/251], perturbed=True)
+  (/shape.19): BoundConcat(name=/shape.19, inputs=[/199, /80, /81], perturbed=False)
+  (/254): BoundSplit(name=/254, inputs=[/shape.19], perturbed=False)
+  (/255): BoundSplit(name=/255, inputs=[/shape.19], perturbed=False)
+  (/256): BoundSplit(name=/256, inputs=[/shape.19], perturbed=False)
+  (/257): BoundSqueeze(name=/257, inputs=[/254], perturbed=False)
+  (/258): BoundSqueeze(name=/258, inputs=[/255], perturbed=False)
+  (/259): BoundSqueeze(name=/259, inputs=[/256], perturbed=False)
+  (/260): BoundUnsqueeze(name=/260, inputs=[/257], perturbed=False)
+  (/261): BoundUnsqueeze(name=/261, inputs=[/258], perturbed=False)
+  (/262): BoundUnsqueeze(name=/262, inputs=[/259], perturbed=False)
+  (/263): BoundConcat(name=/263, inputs=[/260, /261, /262], perturbed=False)
+  (/264): BoundReshape(name=/264, inputs=[/252, /263], perturbed=True)
+  (/265): BoundTranspose(name=/265, inputs=[/82], perturbed=False)
+  (/266): BoundMatMul(name=/266, inputs=[/264, /265], perturbed=True)
+  (/267): BoundAdd(name=/267, inputs=[/83, /266], perturbed=True)
+  (/268): BoundAdd(name=/268, inputs=[/267, /180], perturbed=True)
+  (/input.8): BoundTranspose(name=/input.8, inputs=[/268], perturbed=True)
+  (/270): BoundBatchNormalization(name=/270, inputs=[/input.8, /84, /85, /86, /87], perturbed=True)
+  (/271): BoundTranspose(name=/271, inputs=[/270], perturbed=True)
+  (/272): BoundTranspose(name=/272, inputs=[/89], perturbed=False)
+  (/273): BoundMatMul(name=/273, inputs=[/271, /272], perturbed=True)
+  (/input.12): BoundAdd(name=/input.12, inputs=[/90, /273], perturbed=True)
+  (/275): BoundRelu(name=/275, inputs=[/input.12], perturbed=True)
+  (/276): BoundTranspose(name=/276, inputs=[/91], perturbed=False)
+  (/277): BoundMatMul(name=/277, inputs=[/275, /276], perturbed=True)
+  (/278): BoundAdd(name=/278, inputs=[/92, /277], perturbed=True)
+  (/279): BoundAdd(name=/279, inputs=[/278, /268], perturbed=True)
+  (/input.16): BoundTranspose(name=/input.16, inputs=[/279], perturbed=True)
+  (/281): BoundBatchNormalization(name=/281, inputs=[/input.16, /93, /94, /95, /96], perturbed=True)
+  (/282): BoundTranspose(name=/282, inputs=[/281], perturbed=True)
+  (/283): BoundCast(name=/283, inputs=[/98], perturbed=False)
+  (/284): BoundConstant(name=/284, value=tensor([1]))
+  (/285): BoundReshape(name=/285, inputs=[/283, /284], perturbed=False)
+  (/286): BoundGather(name=/286, inputs=[/184, /285], perturbed=False)
+  (/287): BoundSqueeze(name=/287, inputs=[/286], perturbed=False)
+  (/288): BoundTranspose(name=/288, inputs=[/99], perturbed=False)
+  (/289): BoundMatMul(name=/289, inputs=[/282, /288], perturbed=True)
+  (/290): BoundAdd(name=/290, inputs=[/100, /289], perturbed=True)
+  (/291): BoundTranspose(name=/291, inputs=[/101], perturbed=False)
+  (/292): BoundMatMul(name=/292, inputs=[/282, /291], perturbed=True)
+  (/293): BoundAdd(name=/293, inputs=[/102, /292], perturbed=True)
+  (/294): BoundTranspose(name=/294, inputs=[/103], perturbed=False)
+  (/295): BoundMatMul(name=/295, inputs=[/282, /294], perturbed=True)
+  (/296): BoundAdd(name=/296, inputs=[/104, /295], perturbed=True)
+  (/297): BoundUnsqueeze(name=/297, inputs=[/287], perturbed=False)
+  (/shape.23): BoundConcat(name=/shape.23, inputs=[/297, /105, /106, /107], perturbed=False)
+  (/shape.27): BoundConcat(name=/shape.27, inputs=[/297, /108, /109, /110], perturbed=False)
+  (/shape.31): BoundConcat(name=/shape.31, inputs=[/297, /111, /112, /113], perturbed=False)
+  (/301): BoundSplit(name=/301, inputs=[/shape.23], perturbed=False)
+  (/302): BoundSplit(name=/302, inputs=[/shape.23], perturbed=False)
+  (/303): BoundSplit(name=/303, inputs=[/shape.23], perturbed=False)
+  (/304): BoundSplit(name=/304, inputs=[/shape.23], perturbed=False)
+  (/305): BoundSqueeze(name=/305, inputs=[/301], perturbed=False)
+  (/306): BoundSqueeze(name=/306, inputs=[/302], perturbed=False)
+  (/307): BoundSqueeze(name=/307, inputs=[/303], perturbed=False)
+  (/308): BoundSqueeze(name=/308, inputs=[/304], perturbed=False)
+  (/309): BoundUnsqueeze(name=/309, inputs=[/305], perturbed=False)
+  (/310): BoundUnsqueeze(name=/310, inputs=[/306], perturbed=False)
+  (/311): BoundUnsqueeze(name=/311, inputs=[/307], perturbed=False)
+  (/312): BoundUnsqueeze(name=/312, inputs=[/308], perturbed=False)
+  (/313): BoundConcat(name=/313, inputs=[/309, /310, /311, /312], perturbed=False)
+  (/314): BoundReshape(name=/314, inputs=[/290, /313], perturbed=True)
+  (/315): BoundTranspose(name=/315, inputs=[/314], perturbed=True)
+  (/316): BoundSplit(name=/316, inputs=[/shape.27], perturbed=False)
+  (/317): BoundSplit(name=/317, inputs=[/shape.27], perturbed=False)
+  (/318): BoundSplit(name=/318, inputs=[/shape.27], perturbed=False)
+  (/319): BoundSplit(name=/319, inputs=[/shape.27], perturbed=False)
+  (/320): BoundSqueeze(name=/320, inputs=[/316], perturbed=False)
+  (/321): BoundSqueeze(name=/321, inputs=[/317], perturbed=False)
+  (/322): BoundSqueeze(name=/322, inputs=[/318], perturbed=False)
+  (/323): BoundSqueeze(name=/323, inputs=[/319], perturbed=False)
+  (/324): BoundUnsqueeze(name=/324, inputs=[/320], perturbed=False)
+  (/325): BoundUnsqueeze(name=/325, inputs=[/321], perturbed=False)
+  (/326): BoundUnsqueeze(name=/326, inputs=[/322], perturbed=False)
+  (/327): BoundUnsqueeze(name=/327, inputs=[/323], perturbed=False)
+  (/328): BoundConcat(name=/328, inputs=[/324, /325, /326, /327], perturbed=False)
+  (/329): BoundReshape(name=/329, inputs=[/293, /328], perturbed=True)
+  (/330): BoundSplit(name=/330, inputs=[/shape.31], perturbed=False)
+  (/331): BoundSplit(name=/331, inputs=[/shape.31], perturbed=False)
+  (/332): BoundSplit(name=/332, inputs=[/shape.31], perturbed=False)
+  (/333): BoundSplit(name=/333, inputs=[/shape.31], perturbed=False)
+  (/334): BoundSqueeze(name=/334, inputs=[/330], perturbed=False)
+  (/335): BoundSqueeze(name=/335, inputs=[/331], perturbed=False)
+  (/336): BoundSqueeze(name=/336, inputs=[/332], perturbed=False)
+  (/337): BoundSqueeze(name=/337, inputs=[/333], perturbed=False)
+  (/338): BoundUnsqueeze(name=/338, inputs=[/334], perturbed=False)
+  (/339): BoundUnsqueeze(name=/339, inputs=[/335], perturbed=False)
+  (/340): BoundUnsqueeze(name=/340, inputs=[/336], perturbed=False)
+  (/341): BoundUnsqueeze(name=/341, inputs=[/337], perturbed=False)
+  (/342): BoundConcat(name=/342, inputs=[/338, /339, /340, /341], perturbed=False)
+  (/343): BoundReshape(name=/343, inputs=[/296, /342], perturbed=True)
+  (/344): BoundTranspose(name=/344, inputs=[/343], perturbed=True)
+  (/345): BoundTranspose(name=/345, inputs=[/329], perturbed=True)
+  (/346): BoundMatMul(name=/346, inputs=[/315, /345], perturbed=True)
+  (/input.20): BoundMul(name=/input.20, inputs=[/346, /114], perturbed=True)
+  (/349): BoundMatMul(name=/349, inputs=[/348/mul, /344], perturbed=True)
+  (/350): BoundTranspose(name=/350, inputs=[/349], perturbed=True)
+  (/shape.35): BoundConcat(name=/shape.35, inputs=[/297, /115, /116], perturbed=False)
+  (/352): BoundSplit(name=/352, inputs=[/shape.35], perturbed=False)
+  (/353): BoundSplit(name=/353, inputs=[/shape.35], perturbed=False)
+  (/354): BoundSplit(name=/354, inputs=[/shape.35], perturbed=False)
+  (/355): BoundSqueeze(name=/355, inputs=[/352], perturbed=False)
+  (/356): BoundSqueeze(name=/356, inputs=[/353], perturbed=False)
+  (/357): BoundSqueeze(name=/357, inputs=[/354], perturbed=False)
+  (/358): BoundUnsqueeze(name=/358, inputs=[/355], perturbed=False)
+  (/359): BoundUnsqueeze(name=/359, inputs=[/356], perturbed=False)
+  (/360): BoundUnsqueeze(name=/360, inputs=[/357], perturbed=False)
+  (/361): BoundConcat(name=/361, inputs=[/358, /359, /360], perturbed=False)
+  (/362): BoundReshape(name=/362, inputs=[/350, /361], perturbed=True)
+  (/363): BoundTranspose(name=/363, inputs=[/117], perturbed=False)
+  (/364): BoundMatMul(name=/364, inputs=[/362, /363], perturbed=True)
+  (/365): BoundAdd(name=/365, inputs=[/118, /364], perturbed=True)
+  (/366): BoundAdd(name=/366, inputs=[/365, /279], perturbed=True)
+  (/input.24): BoundTranspose(name=/input.24, inputs=[/366], perturbed=True)
+  (/368): BoundBatchNormalization(name=/368, inputs=[/input.24, /119, /120, /121, /122], perturbed=True)
+  (/369): BoundTranspose(name=/369, inputs=[/368], perturbed=True)
+  (/370): BoundTranspose(name=/370, inputs=[/124], perturbed=False)
+  (/371): BoundMatMul(name=/371, inputs=[/369, /370], perturbed=True)
+  (/input.28): BoundAdd(name=/input.28, inputs=[/125, /371], perturbed=True)
+  (/373): BoundRelu(name=/373, inputs=[/input.28], perturbed=True)
+  (/374): BoundTranspose(name=/374, inputs=[/126], perturbed=False)
+  (/375): BoundMatMul(name=/375, inputs=[/373, /374], perturbed=True)
+  (/376): BoundAdd(name=/376, inputs=[/127, /375], perturbed=True)
+  (/377): BoundAdd(name=/377, inputs=[/376, /366], perturbed=True)
+  (/input.32): BoundReduceMean(name=/input.32, inputs=[/377], perturbed=True)
+  (/379): BoundBatchNormalization(name=/379, inputs=[/input.32, /128, /129, /130, /131], perturbed=True)
+  (/380): BoundLinear(name=/380, inputs=[/379, /133, /134], perturbed=True)
+  (/250/split/1): BoundReduceMax(name=/250/split/1, inputs=[/input.4], perturbed=True)
+  (/250/split/2): BoundUnsqueeze(name=/250/split/2, inputs=[/250/split/1], perturbed=True)
+  (/250/split/3): BoundSub(name=/250/split/3, inputs=[/input.4, /250/split/2], perturbed=True)
+  (/250/split/4): BoundExp(name=/250/split/4, inputs=[/250/split/3], perturbed=True)
+  (/250/split/5): BoundReduceSum(name=/250/split/5, inputs=[/250/split/4], perturbed=True)
+  (/348/split/1): BoundReduceMax(name=/348/split/1, inputs=[/input.20], perturbed=True)
+  (/348/split/2): BoundUnsqueeze(name=/348/split/2, inputs=[/348/split/1], perturbed=True)
+  (/348/split/3): BoundSub(name=/348/split/3, inputs=[/input.20, /348/split/2], perturbed=True)
+  (/348/split/4): BoundExp(name=/348/split/4, inputs=[/348/split/3], perturbed=True)
+  (/348/split/5): BoundReduceSum(name=/348/split/5, inputs=[/348/split/4], perturbed=True)
+  (/250/reciprocal): BoundReciprocal(name=/250/reciprocal, inputs=[/250/split/5], perturbed=True)
+  (/250/mul): BoundMul(name=/250/mul, inputs=[/250/split/4, /250/reciprocal], perturbed=True)
+  (/348/reciprocal): BoundReciprocal(name=/348/reciprocal, inputs=[/348/split/5], perturbed=True)
+  (/348/mul): BoundMul(name=/348/mul, inputs=[/348/split/4, /348/reciprocal], perturbed=True)
+)
+Original output: tensor([[ 0.46939293,  1.33759010,  0.30373889, -0.73568994, -0.72757292,
+         -0.10937835, -1.34962022,  1.58034849, -2.83047891,  2.92841601]])
+Split layers:
+  BoundTranspose(name=/217, inputs=[/216], perturbed=True): [(BoundMatMul(name=/248, inputs=[/217, /247], perturbed=True), 0)]
+  BoundTranspose(name=/247, inputs=[/231], perturbed=True): [(BoundMatMul(name=/248, inputs=[/217, /247], perturbed=True), 1)]
+  BoundMul(name=/250/mul, inputs=[/250/split/4, /250/reciprocal], perturbed=True): [(BoundMatMul(name=/251, inputs=[/250/mul, /246], perturbed=True), 0)]
+  BoundTranspose(name=/246, inputs=[/245], perturbed=True): [(BoundMatMul(name=/251, inputs=[/250/mul, /246], perturbed=True), 1)]
+  BoundAdd(name=/input.12, inputs=[/90, /273], perturbed=True): [(BoundRelu(name=/275, inputs=[/input.12], perturbed=True), 0)]
+  BoundTranspose(name=/315, inputs=[/314], perturbed=True): [(BoundMatMul(name=/346, inputs=[/315, /345], perturbed=True), 0)]
+  BoundTranspose(name=/345, inputs=[/329], perturbed=True): [(BoundMatMul(name=/346, inputs=[/315, /345], perturbed=True), 1)]
+  BoundMul(name=/348/mul, inputs=[/348/split/4, /348/reciprocal], perturbed=True): [(BoundMatMul(name=/349, inputs=[/348/mul, /344], perturbed=True), 0)]
+  BoundTranspose(name=/344, inputs=[/343], perturbed=True): [(BoundMatMul(name=/349, inputs=[/348/mul, /344], perturbed=True), 1)]
+  BoundAdd(name=/input.28, inputs=[/125, /371], perturbed=True): [(BoundRelu(name=/373, inputs=[/input.28], perturbed=True), 0)]
+  BoundReduceSum(name=/250/split/5, inputs=[/250/split/4], perturbed=True): [(BoundReciprocal(name=/250/reciprocal, inputs=[/250/split/5], perturbed=True), 0)]
+  BoundExp(name=/250/split/4, inputs=[/250/split/3], perturbed=True): [(BoundMul(name=/250/mul, inputs=[/250/split/4, /250/reciprocal], perturbed=True), 0)]
+  BoundReciprocal(name=/250/reciprocal, inputs=[/250/split/5], perturbed=True): [(BoundMul(name=/250/mul, inputs=[/250/split/4, /250/reciprocal], perturbed=True), 1)]
+  BoundReduceSum(name=/348/split/5, inputs=[/348/split/4], perturbed=True): [(BoundReciprocal(name=/348/reciprocal, inputs=[/348/split/5], perturbed=True), 0)]
+  BoundExp(name=/348/split/4, inputs=[/348/split/3], perturbed=True): [(BoundMul(name=/348/mul, inputs=[/348/split/4, /348/reciprocal], perturbed=True), 0)]
+  BoundReciprocal(name=/348/reciprocal, inputs=[/348/split/5], perturbed=True): [(BoundMul(name=/348/mul, inputs=[/348/split/4, /348/reciprocal], perturbed=True), 1)]
+Nonlinear functions:
+   BoundMatMul(name=/248, inputs=[/217, /247], perturbed=True)
+   BoundMatMul(name=/251, inputs=[/250/mul, /246], perturbed=True)
+   BoundRelu(name=/275, inputs=[/input.12], perturbed=True)
+   BoundMatMul(name=/346, inputs=[/315, /345], perturbed=True)
+   BoundMatMul(name=/349, inputs=[/348/mul, /344], perturbed=True)
+   BoundRelu(name=/373, inputs=[/input.28], perturbed=True)
+   BoundExp(name=/250/split/4, inputs=[/250/split/3], perturbed=True)
+   BoundExp(name=/348/split/4, inputs=[/348/split/3], perturbed=True)
+   BoundReciprocal(name=/250/reciprocal, inputs=[/250/split/5], perturbed=True)
+   BoundMul(name=/250/mul, inputs=[/250/split/4, /250/reciprocal], perturbed=True)
+   BoundReciprocal(name=/348/reciprocal, inputs=[/348/split/5], perturbed=True)
+   BoundMul(name=/348/mul, inputs=[/348/split/4, /348/reciprocal], perturbed=True)
+layer /275 start_node /315 using full alpha [2, 240, 1, 5, 96] with unstable size None total_size 240 output_shape torch.Size([3, 5, 16])
+layer /275 start_node /345 using full alpha [2, 240, 1, 5, 96] with unstable size None total_size 240 output_shape torch.Size([3, 16, 5])
+layer /275 start_node /348/split/3 using full alpha [2, 75, 1, 5, 96] with unstable size None total_size 75 output_shape torch.Size([3, 5, 5])
+layer /275 start_node /348/split/5 using full alpha [2, 15, 1, 5, 96] with unstable size None total_size 15 output_shape torch.Size([3, 5, 1])
+layer /275 start_node /348/split/4 using full alpha [2, 75, 1, 5, 96] with unstable size None total_size 75 output_shape torch.Size([3, 5, 5])
+layer /275 start_node /348/reciprocal using full alpha [2, 15, 1, 5, 96] with unstable size None total_size 15 output_shape torch.Size([3, 5, 1])
+layer /275 start_node /348/mul using full alpha [2, 75, 1, 5, 96] with unstable size None total_size 75 output_shape torch.Size([3, 5, 5])
+layer /275 start_node /344 using full alpha [2, 240, 1, 5, 96] with unstable size None total_size 240 output_shape torch.Size([3, 5, 16])
+layer /275 start_node /input.28 using full alpha [2, 480, 1, 5, 96] with unstable size None total_size 480 output_shape torch.Size([5, 96])
+layer /275 start_node /380 using full alpha [2, 9, 1, 5, 96] with unstable size None total_size 9 output_shape 9
+layer /373 start_node /380 using full alpha [2, 9, 1, 5, 96] with unstable size None total_size 9 output_shape 9
+Optimizable variables initialized.
+initial CROWN bounds: tensor([[-1.31402814, -1.33001578, -1.14983714,  1.03748882, -0.32350028,
+          0.10630223,  0.50235039, -2.28007817,  2.63794994]]) None
+best_l after optimization: 10.727272033691406
+alpha/beta optimization time: 28.561654090881348
+initial alpha-crown bounds: tensor([[ 0.25727409, -0.19108634,  0.46303043,  2.08178186,  1.20014954,
+          1.30193055,  1.98387253, -0.29753110,  3.92785072]])
+Worst class: (+ rhs) -0.2975310981273651
+Total VNNLIB file length: 9, max property batch size: 1, total number of batches: 9
+lA shape: [torch.Size([9, 1, 3, 5, 5]), torch.Size([9, 1, 3, 5, 16]), torch.Size([9, 1, 5, 96]), torch.Size([9, 1, 3, 5, 5]), torch.Size([9, 1, 3, 5, 16]), torch.Size([9, 1, 5, 96]), torch.Size([9, 1, 3, 5, 1]), torch.Size([9, 1, 3, 5, 5]), torch.Size([9, 1, 3, 5, 1]), torch.Size([9, 1, 3, 5, 5])]
+
+Properties batch 0, size 1
+Remaining timeout: 470.1481339931488
+##### Instance 0 first 10 spec matrices: 
+tensor([[[-1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Initial alpha-CROWN verified for spec index tensor([0]) with bound 0.2572740912437439.
+
+Properties batch 1, size 1
+Remaining timeout: 470.0595989227295
+##### Instance 0 first 10 spec matrices: 
+tensor([[[ 0., -1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Remaining spec index tensor([0]) with bounds tensor([[-0.19108634]]) need to verify.
+Model prediction is: tensor([ 0.46939293,  1.33759010,  0.30373889, -0.73568994, -0.72757292,
+        -0.10937835, -1.34962022,  1.58034849, -2.83047891,  2.92841601])
+build_with_refined_bounds batch [1/1]
+setting alpha for layer /275 start_node /380 with alignment adjustment
+setting alpha for layer /373 start_node /380 with alignment adjustment
+setting alpha for layer /250/reciprocal start_node /380 with alignment adjustment
+setting alpha for layer /348/reciprocal start_node /380 with alignment adjustment
+setting alpha for layer /248 start_node /380 with alignment adjustment
+setting alpha for layer /251 start_node /380 with alignment adjustment
+setting alpha for layer /346 start_node /380 with alignment adjustment
+setting alpha for layer /349 start_node /380 with alignment adjustment
+setting alpha for layer /250/mul start_node /380 with alignment adjustment
+setting alpha for layer /348/mul start_node /380 with alignment adjustment
+all alpha initialized
+true A is required, we do a full backward CROWN pass to obtain it
+(alpha-)CROWN with fixed intermediate bounds: tensor([[-0.19101159]]) tensor([[3.10069609]])
+Intermediate layers: /217,/247,/250/mul,/246,/input.12,/315,/345,/348/mul,/344,/input.28,/250/split/3,/348/split/3,/250/split/5,/250/split/4,/250/reciprocal,/348/split/5,/348/split/4,/348/reciprocal,/380
+Keeping alphas for these layers: ['/380']
+Keeping alphas for these layers: ['/380']
+Node /248 input 0: size torch.Size([3, 5, 16]) unstable 240
+Node /248 input 1: size torch.Size([3, 16, 5]) unstable 240
+Node /251 input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /251 input 1: size torch.Size([3, 5, 16]) unstable 240
+Node /275 input 0: size torch.Size([5, 96]) unstable 44
+Node /346 input 0: size torch.Size([3, 5, 16]) unstable 240
+Node /346 input 1: size torch.Size([3, 16, 5]) unstable 240
+Node /349 input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /349 input 1: size torch.Size([3, 5, 16]) unstable 240
+Node /373 input 0: size torch.Size([5, 96]) unstable 93
+Node /250/reciprocal input 0: size torch.Size([3, 5, 1]) unstable 15
+Node /250/mul input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /250/mul input 1: size torch.Size([3, 5, 1]) unstable 15
+Node /348/reciprocal input 0: size torch.Size([3, 5, 1]) unstable 15
+Node /348/mul input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /348/mul input 1: size torch.Size([3, 5, 1]) unstable 15
+-----------------
+# of unstable neurons: 1937
+-----------------
+
+BaB round 1
+batch: 1
+Average branched neurons at iteration 1:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 142] 
+Time: prepare 0.0007    bound 0.5778    transfer 0.0001    finalize 0.0162    func 0.5949    
+Accumulated time: func 0.5949    prepare 0.0007    bound 0.5778    transfer 0.0001    finalize 0.0162    
+Current worst splitting domains lb-rhs (depth):
+-0.12764 (1), -0.05910 (1), 
+length of domains: 2
+Time: pickout 0.0008    decision 0.2064    set_bounds 0.0018    solve 0.5949    add 0.0053    
+Accumulated time: pickout 0.0008    decision 0.2064    set_bounds 0.0018    solve 0.5949    add 0.0053    
+Current (lb-rhs): -0.12763948738574982
+2 domains visited
+Cumulative time: 0.8892779350280762
+
+BaB round 2
+batch: 2
+Average branched neurons at iteration 2:  1.0000
+splitting decisions: 
+split level 0: [/348/split/5, 6] [/input.28, 452] 
+Time: prepare 0.0016    bound 0.5988    transfer 0.0001    finalize 0.0005    func 0.6011    
+Accumulated time: func 1.1960    prepare 0.0023    bound 1.1766    transfer 0.0003    finalize 0.0167    
+Current worst splitting domains lb-rhs (depth):
+-0.05179 (2), -0.05020 (2), 
+length of domains: 2
+Time: pickout 0.0008    decision 0.3042    set_bounds 0.0032    solve 0.6011    add 0.0025    
+Accumulated time: pickout 0.0016    decision 0.5106    set_bounds 0.0050    solve 1.1961    add 0.0078    
+Current (lb-rhs): -0.05178924277424812
+4 domains visited
+Cumulative time: 1.8014543056488037
+
+BaB round 3
+batch: 2
+Average branched neurons at iteration 3:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 292] [/input.28, 292] 
+
+all verified at 9th iter
+Time: prepare 0.0026    bound 0.6155    transfer 0.0001    finalize 0.0005    func 0.6188    
+Accumulated time: func 1.8147    prepare 0.0049    bound 1.7921    transfer 0.0004    finalize 0.0172    
+length of domains: 0
+Time: pickout 0.0009    decision 0.2913    set_bounds 0.0021    solve 0.6188    add 0.0001    
+Accumulated time: pickout 0.0025    decision 0.8019    set_bounds 0.0071    solve 1.8149    add 0.0078    
+No domains left, verification finished!
+Current (lb-rhs): 1.0000000116860974e-07
+4 domains visited
+Cumulative time: 2.71486234664917
+
+
+Properties batch 2, size 1
+Remaining timeout: 466.8036937713623
+##### Instance 0 first 10 spec matrices: 
+tensor([[[ 0.,  0., -1.,  0.,  0.,  0.,  0.,  0.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Initial alpha-CROWN verified for spec index tensor([0]) with bound 0.4630304276943207.
+
+Properties batch 3, size 1
+Remaining timeout: 466.71614146232605
+##### Instance 0 first 10 spec matrices: 
+tensor([[[ 0.,  0.,  0., -1.,  0.,  0.,  0.,  0.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Initial alpha-CROWN verified for spec index tensor([0]) with bound 2.0817818641662598.
+
+Properties batch 4, size 1
+Remaining timeout: 466.6244282722473
+##### Instance 0 first 10 spec matrices: 
+tensor([[[ 0.,  0.,  0.,  0., -1.,  0.,  0.,  0.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Initial alpha-CROWN verified for spec index tensor([0]) with bound 1.2001495361328125.
+
+Properties batch 5, size 1
+Remaining timeout: 466.53361535072327
+##### Instance 0 first 10 spec matrices: 
+tensor([[[ 0.,  0.,  0.,  0.,  0., -1.,  0.,  0.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Initial alpha-CROWN verified for spec index tensor([0]) with bound 1.301930546760559.
+
+Properties batch 6, size 1
+Remaining timeout: 466.4444069862366
+##### Instance 0 first 10 spec matrices: 
+tensor([[[ 0.,  0.,  0.,  0.,  0.,  0., -1.,  0.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Initial alpha-CROWN verified for spec index tensor([0]) with bound 1.9838725328445435.
+
+Properties batch 7, size 1
+Remaining timeout: 466.3545067310333
+##### Instance 0 first 10 spec matrices: 
+tensor([[[ 0.,  0.,  0.,  0.,  0.,  0.,  0., -1.,  0.,  1.]]],
+       dtype=torch.float64)
+thresholds: tensor([0.]) ######
+Remaining spec index tensor([0]) with bounds tensor([[-0.29753110]]) need to verify.
+Model prediction is: tensor([ 0.46939293,  1.33759010,  0.30373889, -0.73568994, -0.72757292,
+        -0.10937835, -1.34962022,  1.58034849, -2.83047891,  2.92841601])
+build_with_refined_bounds batch [1/1]
+setting alpha for layer /275 start_node /380 with alignment adjustment
+setting alpha for layer /373 start_node /380 with alignment adjustment
+setting alpha for layer /250/reciprocal start_node /380 with alignment adjustment
+setting alpha for layer /348/reciprocal start_node /380 with alignment adjustment
+setting alpha for layer /248 start_node /380 with alignment adjustment
+setting alpha for layer /251 start_node /380 with alignment adjustment
+setting alpha for layer /346 start_node /380 with alignment adjustment
+setting alpha for layer /349 start_node /380 with alignment adjustment
+setting alpha for layer /250/mul start_node /380 with alignment adjustment
+setting alpha for layer /348/mul start_node /380 with alignment adjustment
+all alpha initialized
+true A is required, we do a full backward CROWN pass to obtain it
+(alpha-)CROWN with fixed intermediate bounds: tensor([[-0.29743889]], grad_fn=<ViewBackward0>) tensor([[3.09826088]], grad_fn=<ViewBackward0>)
+Intermediate layers: /217,/247,/250/mul,/246,/input.12,/315,/345,/348/mul,/344,/input.28,/250/split/3,/348/split/3,/250/split/5,/250/split/4,/250/reciprocal,/348/split/5,/348/split/4,/348/reciprocal,/380
+Keeping alphas for these layers: ['/380']
+Keeping alphas for these layers: ['/380']
+Node /248 input 0: size torch.Size([3, 5, 16]) unstable 240
+Node /248 input 1: size torch.Size([3, 16, 5]) unstable 240
+Node /251 input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /251 input 1: size torch.Size([3, 5, 16]) unstable 240
+Node /275 input 0: size torch.Size([5, 96]) unstable 44
+Node /346 input 0: size torch.Size([3, 5, 16]) unstable 240
+Node /346 input 1: size torch.Size([3, 16, 5]) unstable 240
+Node /349 input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /349 input 1: size torch.Size([3, 5, 16]) unstable 240
+Node /373 input 0: size torch.Size([5, 96]) unstable 93
+Node /250/reciprocal input 0: size torch.Size([3, 5, 1]) unstable 15
+Node /250/mul input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /250/mul input 1: size torch.Size([3, 5, 1]) unstable 15
+Node /348/reciprocal input 0: size torch.Size([3, 5, 1]) unstable 15
+Node /348/mul input 0: size torch.Size([3, 5, 5]) unstable 75
+Node /348/mul input 1: size torch.Size([3, 5, 1]) unstable 15
+-----------------
+# of unstable neurons: 1937
+-----------------
+
+BaB round 1
+batch: 1
+Average branched neurons at iteration 1:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 292] 
+Time: prepare 0.0007    bound 0.5885    transfer 0.0001    finalize 0.0003    func 0.5897    
+Accumulated time: func 0.5897    prepare 0.0007    bound 0.5885    transfer 0.0001    finalize 0.0003    
+Current worst splitting domains lb-rhs (depth):
+-0.26490 (1), -0.26410 (1), 
+length of domains: 2
+Time: pickout 0.0006    decision 0.1901    set_bounds 0.0033    solve 0.5898    add 0.0026    
+Accumulated time: pickout 0.0006    decision 0.1901    set_bounds 0.0033    solve 0.5898    add 0.0026    
+Current (lb-rhs): -0.2649008333683014
+2 domains visited
+Cumulative time: 0.8647007942199707
+
+BaB round 2
+batch: 2
+Average branched neurons at iteration 2:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 96] [/input.28, 96] 
+Time: prepare 0.0014    bound 0.6287    transfer 0.0015    finalize 0.0005    func 0.6320    
+Accumulated time: func 1.2218    prepare 0.0021    bound 1.2172    transfer 0.0016    finalize 0.0008    
+Current worst splitting domains lb-rhs (depth):
+-0.24877 (2), -0.24793 (2), -0.23725 (2), -0.23624 (2), 
+length of domains: 4
+Time: pickout 0.0007    decision 0.2875    set_bounds 0.0035    solve 0.6322    add 0.0021    
+Accumulated time: pickout 0.0013    decision 0.4776    set_bounds 0.0068    solve 1.2219    add 0.0047    
+Current (lb-rhs): -0.2487683743238449
+6 domains visited
+Cumulative time: 1.790959358215332
+
+BaB round 3
+batch: 4
+Average branched neurons at iteration 3:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 388] [/input.28, 388] [/input.28, 388] [/input.28, 388] 
+Time: prepare 0.0036    bound 0.6357    transfer 0.0002    finalize 0.0007    func 0.6401    
+Accumulated time: func 1.8619    prepare 0.0057    bound 1.8529    transfer 0.0018    finalize 0.0014    
+Current worst splitting domains lb-rhs (depth):
+-0.23763 (3), -0.23678 (3), -0.22685 (3), -0.22568 (3), -0.11413 (3), -0.11351 (3), -0.10447 (3), -0.10370 (3), 
+length of domains: 8
+Time: pickout 0.0016    decision 0.5094    set_bounds 0.0036    solve 0.6402    add 0.0039    
+Accumulated time: pickout 0.0029    decision 0.9869    set_bounds 0.0104    solve 1.8621    add 0.0087    
+Current (lb-rhs): -0.23762546479701996
+14 domains visited
+Cumulative time: 2.949863910675049
+
+BaB round 4
+batch: 8
+Average branched neurons at iteration 4:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 192] [/input.28, 192] [/input.28, 192] [/input.28, 192] [/input.28, 192] [/input.28, 192] [/input.28, 192] [/input.28, 192] 
+Time: prepare 0.0042    bound 0.6889    transfer 0.0002    finalize 0.0025    func 0.6958    
+Accumulated time: func 2.5577    prepare 0.0099    bound 2.5418    transfer 0.0020    finalize 0.0039    
+Current worst splitting domains lb-rhs (depth):
+-0.22323 (4), -0.22235 (4), -0.22033 (4), -0.21951 (4), -0.21123 (4), -0.21010 (4), -0.20924 (4), -0.20832 (4), -0.08840 (4), -0.08816 (4), -0.08547 (4), -0.08524 (4), -0.07906 (4), -0.07646 (4), -0.07591 (4), -0.07385 (4), 
+length of domains: 16
+Time: pickout 0.0008    decision 1.1214    set_bounds 0.0041    solve 0.6959    add 0.0022    
+Accumulated time: pickout 0.0037    decision 2.1083    set_bounds 0.0145    solve 2.5580    add 0.0108    
+Current (lb-rhs): -0.22323007881641388
+30 domains visited
+Cumulative time: 4.774495363235474
+
+BaB round 5
+batch: 16
+Average branched neurons at iteration 5:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 472] [/input.28, 472] [/input.28, 472] [/input.28, 472] [/input.28, 472] [/input.28, 472] [/input.28, 472] [/input.28, 472] [/input.28, 472] [/input.28, 472] 
+Time: prepare 0.0080    bound 0.7605    transfer 0.0002    finalize 0.0034    func 0.7722    
+Accumulated time: func 3.3299    prepare 0.0179    bound 3.3024    transfer 0.0021    finalize 0.0073    
+Current worst splitting domains lb-rhs (depth):
+-0.19522 (5), -0.19455 (5), -0.19213 (5), -0.19149 (5), -0.18334 (5), -0.18253 (5), -0.18106 (5), -0.18023 (5), -0.17570 (5), -0.17300 (5), -0.17193 (5), -0.16902 (5), -0.16194 (5), -0.15889 (5), -0.15862 (5), -0.15606 (5), -0.05004 (5), -0.04917 (5), -0.04883 (5), -0.04525 (5), 
+length of domains: 32
+Time: pickout 0.0020    decision 2.8455    set_bounds 0.0067    solve 0.7722    add 0.0032    
+Accumulated time: pickout 0.0057    decision 4.9538    set_bounds 0.0212    solve 3.3302    add 0.0140    
+Current (lb-rhs): -0.19522146880626678
+62 domains visited
+Cumulative time: 8.40454363822937
+
+BaB round 6
+batch: 32
+Average branched neurons at iteration 6:  1.0000
+splitting decisions: 
+split level 0: [/345, 87] [/input.12, 395] [/input.12, 395] [/input.12, 395] [/input.12, 388] [/input.12, 388] [/input.12, 395] [/input.12, 388] [/345, 87] [/input.12, 395] 
+Time: prepare 0.0164    bound 0.9179    transfer 0.0003    finalize 0.0075    func 0.9421    
+Accumulated time: func 4.2720    prepare 0.0343    bound 4.2203    transfer 0.0024    finalize 0.0148    
+Current worst splitting domains lb-rhs (depth):
+-0.18758 (6), -0.18696 (6), -0.18426 (6), -0.18379 (6), -0.18198 (6), -0.18134 (6), -0.17883 (6), -0.17829 (6), -0.17556 (6), -0.17429 (6), -0.17275 (6), -0.17228 (6), -0.16985 (6), -0.16899 (6), -0.16815 (6), -0.16779 (6), -0.16735 (6), -0.16652 (6), -0.16428 (6), -0.16267 (6), 
+length of domains: 59
+Time: pickout 0.0009    decision 5.9067    set_bounds 0.0079    solve 0.9422    add 0.0040    
+Accumulated time: pickout 0.0066    decision 10.8604    set_bounds 0.0291    solve 4.2724    add 0.0180    
+Current (lb-rhs): -0.18758438527584076
+121 domains visited
+Cumulative time: 15.268255949020386
+
+BaB round 7
+batch: 50
+Average branched neurons at iteration 7:  1.0000
+splitting decisions: 
+split level 0: [/input.12, 388] [/345, 87] [/input.12, 395] [/input.12, 395] [/input.12, 395] [/input.12, 395] [/input.12, 395] [/input.12, 395] [/input.12, 395] [/input.12, 395] 
+Time: prepare 0.0333    bound 1.2099    transfer 0.0002    finalize 0.0092    func 1.2528    
+Accumulated time: func 5.5248    prepare 0.0676    bound 5.4303    transfer 0.0027    finalize 0.0240    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17742 (7), -0.17686 (7), -0.17438 (7), -0.17396 (7), -0.17029 (7), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16490 (7), -0.16394 (7), -0.16233 (7), -0.16157 (7), -0.15905 (7), -0.15672 (7), 
+length of domains: 93
+Time: pickout 0.0013    decision 11.9723    set_bounds 0.0356    solve 1.2528    add 0.0070    
+Accumulated time: pickout 0.0079    decision 22.8327    set_bounds 0.0648    solve 5.5252    add 0.0250    
+Current (lb-rhs): -0.18255938589572906
+205 domains visited
+Cumulative time: 28.538050889968872
+
+BaB round 8
+batch: 50
+Average branched neurons at iteration 8:  1.0000
+splitting decisions: 
+split level 0: [/input.12, 388] [/input.12, 388] [/input.12, 388] [/input.12, 388] [/input.28, 43] [/input.28, 43] [/input.28, 43] [/input.28, 43] [/input.12, 388] [/input.12, 395] 
+Time: prepare 0.0267    bound 1.5207    transfer 0.0002    finalize 0.0088    func 1.5564    
+Accumulated time: func 7.0812    prepare 0.0943    bound 6.9510    transfer 0.0028    finalize 0.0328    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 128
+Time: pickout 0.0010    decision 12.2158    set_bounds 0.0149    solve 1.5565    add 0.0037    
+Accumulated time: pickout 0.0089    decision 35.0485    set_bounds 0.0796    solve 7.0818    add 0.0287    
+Current (lb-rhs): -0.18255938589572906
+290 domains visited
+Cumulative time: 42.330589294433594
+
+BaB round 9
+batch: 50
+Average branched neurons at iteration 9:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 468] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/345, 88] [/input.28, 468] [/input.28, 468] 
+Time: prepare 0.0323    bound 1.2701    transfer 0.0003    finalize 0.0092    func 1.3120    
+Accumulated time: func 8.3932    prepare 0.1266    bound 8.2211    transfer 0.0031    finalize 0.0420    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 147
+Time: pickout 0.0024    decision 10.4201    set_bounds 0.0171    solve 1.3121    add 0.0061    
+Accumulated time: pickout 0.0113    decision 45.4686    set_bounds 0.0967    solve 8.3939    add 0.0348    
+Current (lb-rhs): -0.18255938589572906
+359 domains visited
+Cumulative time: 54.08931756019592
+
+BaB round 10
+batch: 50
+Average branched neurons at iteration 10:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 468] [/input.12, 234] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/348/split/5, 4] [/348/split/5, 4] [/input.28, 468] [/348/split/5, 4] 
+Time: prepare 0.0336    bound 1.1854    transfer 0.0002    finalize 0.0124    func 1.2317    
+Accumulated time: func 9.6249    prepare 0.1602    bound 9.4066    transfer 0.0033    finalize 0.0544    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 160
+Time: pickout 0.0012    decision 11.0986    set_bounds 0.0133    solve 1.2318    add 0.0062    
+Accumulated time: pickout 0.0125    decision 56.5671    set_bounds 0.1100    solve 9.6257    add 0.0410    
+Current (lb-rhs): -0.18255938589572906
+422 domains visited
+Cumulative time: 66.44152164459229
+
+BaB round 11
+batch: 50
+Average branched neurons at iteration 11:  1.0000
+splitting decisions: 
+split level 0: [/345, 86] [/345, 56] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/input.28, 468] [/345, 86] [/input.28, 468] [/input.28, 468] [/input.28, 468] 
+Time: prepare 0.0456    bound 1.2201    transfer 0.0002    finalize 0.0117    func 1.2776    
+Accumulated time: func 10.9026    prepare 0.2058    bound 10.6266    transfer 0.0035    finalize 0.0662    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 175
+Time: pickout 0.0028    decision 10.5842    set_bounds 0.0140    solve 1.2777    add 0.0044    
+Accumulated time: pickout 0.0152    decision 67.1513    set_bounds 0.1241    solve 10.9034    add 0.0454    
+Current (lb-rhs): -0.18255938589572906
+487 domains visited
+Cumulative time: 78.32545614242554
+
+BaB round 12
+batch: 50
+Average branched neurons at iteration 12:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 477] [/345, 56] [/345, 56] [/input.28, 468] [/345, 1] [/345, 1] [/345, 1] [/345, 1] [/input.12, 234] [/345, 1] 
+Time: prepare 0.0367    bound 1.4383    transfer 0.0002    finalize 0.0117    func 1.4869    
+Accumulated time: func 12.3895    prepare 0.2425    bound 12.0649    transfer 0.0037    finalize 0.0779    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 210
+Time: pickout 0.0010    decision 11.2032    set_bounds 0.0117    solve 1.4870    add 0.0046    
+Accumulated time: pickout 0.0162    decision 78.3545    set_bounds 0.1358    solve 12.3904    add 0.0499    
+Current (lb-rhs): -0.18255938589572906
+572 domains visited
+Cumulative time: 91.0335648059845
+
+BaB round 13
+batch: 50
+Average branched neurons at iteration 13:  1.0000
+splitting decisions: 
+split level 0: [/345, 1] [/345, 1] [/input.12, 234] [/input.12, 234] [/input.12, 234] [/345, 1] [/input.12, 234] [/348/split/5, 6] [/345, 87] [/345, 1] 
+Time: prepare 0.0423    bound 1.3208    transfer 0.0002    finalize 0.0117    func 1.3750    
+Accumulated time: func 13.7645    prepare 0.2848    bound 13.3858    transfer 0.0038    finalize 0.0895    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 233
+Time: pickout 0.0029    decision 10.8537    set_bounds 0.0157    solve 1.3751    add 0.0046    
+Accumulated time: pickout 0.0192    decision 89.2082    set_bounds 0.1515    solve 13.7655    add 0.0545    
+Current (lb-rhs): -0.18255938589572906
+645 domains visited
+Cumulative time: 103.28627610206604
+
+BaB round 14
+batch: 50
+Average branched neurons at iteration 14:  1.0000
+splitting decisions: 
+split level 0: [/348/split/5, 6] [/345, 87] [/345, 1] [/247, 236] [/247, 236] [/247, 236] [/345, 1] [/input.28, 317] [/348/split/5, 6] [/348/split/5, 6] 
+Time: prepare 0.0437    bound 1.4289    transfer 0.0002    finalize 0.0190    func 1.4918    
+Accumulated time: func 15.2563    prepare 0.3285    bound 14.8146    transfer 0.0040    finalize 0.1085    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 271
+Time: pickout 0.0022    decision 11.5807    set_bounds 0.0161    solve 1.4920    add 0.0051    
+Accumulated time: pickout 0.0213    decision 100.7889    set_bounds 0.1675    solve 15.2575    add 0.0596    
+Current (lb-rhs): -0.18255938589572906
+733 domains visited
+Cumulative time: 116.38428592681885
+
+BaB round 15
+batch: 50
+Average branched neurons at iteration 15:  1.0000
+splitting decisions: 
+split level 0: [/348/split/5, 6] [/348/split/5, 6] [/345, 36] [/input.28, 317] [/247, 236] [/348/split/5, 6] [/348/split/5, 6] [/input.28, 189] [/345, 36] [/input.28, 317] 
+Time: prepare 0.0521    bound 1.8799    transfer 0.0003    finalize 0.0125    func 1.9449    
+Accumulated time: func 17.2012    prepare 0.3806    bound 16.6945    transfer 0.0043    finalize 0.1210    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 283
+Time: pickout 0.0011    decision 13.0674    set_bounds 0.1605    solve 1.9451    add 0.0059    
+Accumulated time: pickout 0.0224    decision 113.8563    set_bounds 0.3280    solve 17.2026    add 0.0655    
+Current (lb-rhs): -0.18255938589572906
+795 domains visited
+Cumulative time: 131.56540036201477
+
+BaB round 16
+batch: 50
+Average branched neurons at iteration 16:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 317] [/input.28, 477] [/input.28, 317] [/input.28, 477] [/input.28, 317] [/input.28, 477] [/input.28, 477] [/input.28, 477] [/345, 222] [/input.28, 477] 
+Time: prepare 0.0424    bound 1.5496    transfer 0.0002    finalize 0.0112    func 1.6034    
+Accumulated time: func 18.8046    prepare 0.4230    bound 18.2441    transfer 0.0045    finalize 0.1322    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 278
+Time: pickout 0.0029    decision 13.2985    set_bounds 0.0151    solve 1.6036    add 0.0038    
+Accumulated time: pickout 0.0253    decision 127.1548    set_bounds 0.3431    solve 18.8062    add 0.0693    
+Current (lb-rhs): -0.18255938589572906
+840 domains visited
+Cumulative time: 146.49205231666565
+
+BaB round 17
+batch: 50
+Average branched neurons at iteration 17:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 317] [/345, 36] [/input.28, 477] [/input.28, 477] [/input.28, 477] [/input.28, 477] [/input.28, 477] [/input.12, 155] [/input.28, 477] [/input.28, 477] 
+Time: prepare 0.0468    bound 1.4327    transfer 0.0002    finalize 0.0124    func 1.4922    
+Accumulated time: func 20.2968    prepare 0.4698    bound 19.6768    transfer 0.0047    finalize 0.1446    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 287
+Time: pickout 0.0013    decision 12.1879    set_bounds 0.0200    solve 1.4923    add 0.0107    
+Accumulated time: pickout 0.0265    decision 139.3428    set_bounds 0.3631    solve 20.2985    add 0.0800    
+Current (lb-rhs): -0.18255938589572906
+899 domains visited
+Cumulative time: 160.20559668540955
+
+BaB round 18
+batch: 50
+Average branched neurons at iteration 18:  1.0000
+splitting decisions: 
+split level 0: [/345, 36] [/345, 51] [/input.28, 189] [/345, 51] [/345, 36] [/input.28, 317] [/345, 192] [/input.12, 138] [/345, 36] [/input.28, 189] 
+Time: prepare 0.0462    bound 1.4441    transfer 0.0002    finalize 0.0123    func 1.5028    
+Accumulated time: func 21.7996    prepare 0.5160    bound 21.1209    transfer 0.0049    finalize 0.1569    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 316
+Time: pickout 0.0031    decision 12.3205    set_bounds 0.0168    solve 1.5029    add 0.0051    
+Accumulated time: pickout 0.0296    decision 151.6632    set_bounds 0.3799    solve 21.8014    add 0.0851    
+Current (lb-rhs): -0.18255938589572906
+978 domains visited
+Cumulative time: 174.05615997314453
+
+BaB round 19
+batch: 50
+Average branched neurons at iteration 19:  1.0000
+splitting decisions: 
+split level 0: [/345, 36] [/input.28, 189] [/input.28, 189] [/345, 51] [/input.28, 189] [/345, 51] [/input.28, 189] [/input.28, 189] [/input.28, 189] [/348/split/5, 6] 
+Time: prepare 0.0577    bound 1.8752    transfer 0.0002    finalize 0.0195    func 1.9527    
+Accumulated time: func 23.7523    prepare 0.5737    bound 22.9961    transfer 0.0051    finalize 0.1764    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 343
+Time: pickout 0.0011    decision 12.4713    set_bounds 0.0203    solve 1.9528    add 0.0106    
+Accumulated time: pickout 0.0307    decision 164.1345    set_bounds 0.4002    solve 23.7542    add 0.0957    
+Current (lb-rhs): -0.18255938589572906
+1055 domains visited
+Cumulative time: 188.51362705230713
+
+BaB round 20
+batch: 50
+Average branched neurons at iteration 20:  1.0000
+splitting decisions: 
+split level 0: [/345, 56] [/input.28, 189] [/345, 51] [/345, 51] [/345, 51] [/input.28, 189] [/345, 0] [/input.28, 189] [/345, 51] [/348/split/5, 6] 
+Time: prepare 0.0492    bound 1.5828    transfer 0.0002    finalize 0.0154    func 1.6477    
+Accumulated time: func 25.3999    prepare 0.6229    bound 24.5790    transfer 0.0053    finalize 0.1918    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 379
+Time: pickout 0.0034    decision 13.4798    set_bounds 0.0195    solve 1.6478    add 0.0094    
+Accumulated time: pickout 0.0341    decision 177.6143    set_bounds 0.4198    solve 25.4020    add 0.1051    
+Current (lb-rhs): -0.18255938589572906
+1141 domains visited
+Cumulative time: 203.67605900764465
+
+BaB round 21
+batch: 50
+Average branched neurons at iteration 21:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 189] [/input.28, 189] [/345, 51] [/345, 56] [/345, 51] [/input.28, 189] [/input.28, 189] [/345, 51] [/input.28, 189] [/345, 56] 
+Time: prepare 0.0722    bound 1.6062    transfer 0.0002    finalize 0.0129    func 1.6915    
+Accumulated time: func 27.0914    prepare 0.6951    bound 26.1852    transfer 0.0055    finalize 0.2046    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 405
+Time: pickout 0.0011    decision 13.5561    set_bounds 0.0403    solve 1.6916    add 0.0070    
+Accumulated time: pickout 0.0352    decision 191.1704    set_bounds 0.4600    solve 27.0936    add 0.1121    
+Current (lb-rhs): -0.18255938589572906
+1217 domains visited
+Cumulative time: 218.9728820323944
+
+BaB round 22
+batch: 50
+Average branched neurons at iteration 22:  1.0000
+splitting decisions: 
+split level 0: [/348/split/5, 1] [/345, 56] [/345, 1] [/345, 1] [/345, 56] [/348/split/5, 6] [/348/split/5, 6] [/345, 56] [/input.28, 99] [/input.12, 155] 
+Time: prepare 0.0556    bound 1.6512    transfer 0.0002    finalize 0.0127    func 1.7197    
+Accumulated time: func 28.8111    prepare 0.7507    bound 27.8364    transfer 0.0057    finalize 0.2173    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 427
+Time: pickout 0.0010    decision 13.1868    set_bounds 0.0214    solve 1.7198    add 0.0066    
+Accumulated time: pickout 0.0362    decision 204.3572    set_bounds 0.4814    solve 28.8134    add 0.1187    
+Current (lb-rhs): -0.18255938589572906
+1289 domains visited
+Cumulative time: 233.90936422348022
+
+BaB round 23
+batch: 50
+Average branched neurons at iteration 23:  1.0000
+splitting decisions: 
+split level 0: [/247, 236] [/input.28, 99] [/345, 192] [/input.12, 138] [/345, 1] [/247, 236] [/345, 56] [/345, 1] [/247, 236] [/345, 192] 
+Time: prepare 0.0611    bound 1.7234    transfer 0.0002    finalize 0.0149    func 1.7996    
+Accumulated time: func 30.6108    prepare 0.8118    bound 29.5598    transfer 0.0058    finalize 0.2322    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 449
+Time: pickout 0.0010    decision 13.8303    set_bounds 0.0247    solve 1.7998    add 0.0076    
+Accumulated time: pickout 0.0372    decision 218.1874    set_bounds 0.5061    solve 30.6132    add 0.1263    
+Current (lb-rhs): -0.18255938589572906
+1361 domains visited
+Cumulative time: 249.57369947433472
+
+BaB round 24
+batch: 50
+Average branched neurons at iteration 24:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 156] [/345, 56] [/345, 56] [/input.28, 156] [/247, 236] [/input.28, 99] [/345, 56] [/input.28, 99] [/345, 56] [/345, 56] 
+Time: prepare 0.0565    bound 1.8676    transfer 0.0003    finalize 0.0171    func 1.9438    
+Accumulated time: func 32.5546    prepare 0.8683    bound 31.4274    transfer 0.0062    finalize 0.2492    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 457
+Time: pickout 0.0031    decision 14.1926    set_bounds 0.0202    solve 1.9439    add 0.0068    
+Accumulated time: pickout 0.0403    decision 232.3801    set_bounds 0.5263    solve 32.5571    add 0.1331    
+Current (lb-rhs): -0.18255938589572906
+1419 domains visited
+Cumulative time: 265.7415361404419
+
+BaB round 25
+batch: 50
+Average branched neurons at iteration 25:  1.0000
+splitting decisions: 
+split level 0: [/345, 0] [/input.28, 99] [/input.28, 99] [/input.12, 155] [/input.28, 99] [/input.28, 156] [/input.12, 155] [/input.12, 155] [/345, 0] [/345, 0] 
+Time: prepare 0.0548    bound 1.7612    transfer 0.0002    finalize 0.0141    func 1.8304    
+Accumulated time: func 34.3849    prepare 0.9232    bound 33.1886    transfer 0.0064    finalize 0.2634    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 472
+Time: pickout 0.0032    decision 14.4239    set_bounds 0.0169    solve 1.8304    add 0.0043    
+Accumulated time: pickout 0.0435    decision 246.8040    set_bounds 0.5432    solve 34.3875    add 0.1374    
+Current (lb-rhs): -0.18255938589572906
+1484 domains visited
+Cumulative time: 282.02180218696594
+
+BaB round 26
+batch: 50
+Average branched neurons at iteration 26:  1.0000
+splitting decisions: 
+split level 0: [/345, 1] [/345, 224] [/247, 236] [/input.28, 156] [/input.28, 156] [/345, 224] [/input.28, 156] [/345, 0] [/input.28, 99] [/input.28, 99] 
+Time: prepare 0.0556    bound 1.8291    transfer 0.0023    finalize 0.0125    func 1.8995    
+Accumulated time: func 36.2844    prepare 0.9787    bound 35.0177    transfer 0.0087    finalize 0.2759    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 490
+Time: pickout 0.0025    decision 15.0005    set_bounds 0.0202    solve 1.8996    add 0.0077    
+Accumulated time: pickout 0.0460    decision 261.8045    set_bounds 0.5635    solve 36.2871    add 0.1451    
+Current (lb-rhs): -0.18255938589572906
+1552 domains visited
+Cumulative time: 298.9533088207245
+
+BaB round 27
+batch: 50
+Average branched neurons at iteration 27:  1.0000
+splitting decisions: 
+split level 0: [/345, 194] [/345, 36] [/345, 1] [/345, 194] [/345, 194] [/345, 51] [/345, 1] [/345, 0] [/345, 194] [/247, 236] 
+Time: prepare 0.0521    bound 1.8347    transfer 0.0002    finalize 0.0204    func 1.9075    
+Accumulated time: func 38.1919    prepare 1.0308    bound 36.8524    transfer 0.0089    finalize 0.2962    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 503
+Time: pickout 0.0010    decision 15.3752    set_bounds 0.0199    solve 1.9076    add 0.0075    
+Accumulated time: pickout 0.0470    decision 277.1798    set_bounds 0.5834    solve 38.1947    add 0.1526    
+Current (lb-rhs): -0.18255938589572906
+1615 domains visited
+Cumulative time: 316.268025636673
+
+BaB round 28
+batch: 50
+Average branched neurons at iteration 28:  1.0000
+splitting decisions: 
+split level 0: [/345, 0] [/348/split/5, 4] [/345, 50] [/345, 36] [/input.28, 99] [/345, 50] [/345, 36] [/345, 55] [/345, 36] [/input.28, 372] 
+Time: prepare 0.0639    bound 2.0120    transfer 0.0002    finalize 0.0210    func 2.0971    
+Accumulated time: func 40.2890    prepare 1.0947    bound 38.8643    transfer 0.0091    finalize 0.3173    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 525
+Time: pickout 0.0012    decision 16.5520    set_bounds 0.0230    solve 2.0972    add 0.0109    
+Accumulated time: pickout 0.0482    decision 293.7317    set_bounds 0.6064    solve 40.2919    add 0.1635    
+Current (lb-rhs): -0.18255938589572906
+1687 domains visited
+Cumulative time: 334.95315170288086
+
+BaB round 29
+batch: 50
+Average branched neurons at iteration 29:  1.0000
+splitting decisions: 
+split level 0: [/345, 1] [/345, 36] [/345, 55] [/345, 35] [/345, 1] [/345, 36] [/345, 35] [/input.28, 99] [/345, 55] [/345, 51] 
+Time: prepare 0.0639    bound 1.9314    transfer 0.0002    finalize 0.2199    func 2.2154    
+Accumulated time: func 42.5044    prepare 1.1586    bound 40.7957    transfer 0.0093    finalize 0.5371    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 545
+Time: pickout 0.0070    decision 16.4241    set_bounds 0.0249    solve 2.2155    add 0.0075    
+Accumulated time: pickout 0.0553    decision 310.1559    set_bounds 0.6313    solve 42.5074    add 0.1710    
+Current (lb-rhs): -0.18255938589572906
+1757 domains visited
+Cumulative time: 353.6335940361023
+
+BaB round 30
+batch: 50
+Average branched neurons at iteration 30:  1.0000
+splitting decisions: 
+split level 0: [/345, 0] [/345, 51] [/345, 71] [/345, 36] [/345, 35] [/345, 0] [/345, 35] [/345, 194] [/input.28, 156] [/345, 194] 
+Time: prepare 0.0720    bound 2.6130    transfer 0.0027    finalize 0.0244    func 2.7122    
+Accumulated time: func 45.2166    prepare 1.2306    bound 43.4087    transfer 0.0120    finalize 0.5615    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 567
+Time: pickout 0.0031    decision 16.7449    set_bounds 0.0228    solve 2.7124    add 0.0082    
+Accumulated time: pickout 0.0584    decision 326.9007    set_bounds 0.6540    solve 45.2197    add 0.1792    
+Current (lb-rhs): -0.18255938589572906
+1829 domains visited
+Cumulative time: 373.1283309459686
+
+BaB round 31
+batch: 50
+Average branched neurons at iteration 31:  1.0000
+splitting decisions: 
+split level 0: [/input.12, 155] [/345, 51] [/345, 194] [/345, 36] [/247, 236] [/345, 194] [/345, 35] [/345, 55] [/345, 51] [/345, 36] 
+Time: prepare 0.0833    bound 2.4688    transfer 0.0002    finalize 0.0237    func 2.5762    
+Accumulated time: func 47.7927    prepare 1.3139    bound 45.8775    transfer 0.0122    finalize 0.5852    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 578
+Time: pickout 0.0041    decision 18.8007    set_bounds 0.0236    solve 2.5763    add 0.0112    
+Accumulated time: pickout 0.0625    decision 345.7014    set_bounds 0.6776    solve 47.7960    add 0.1904    
+Current (lb-rhs): -0.18255938589572906
+1890 domains visited
+Cumulative time: 394.54533886909485
+
+BaB round 32
+batch: 50
+Average branched neurons at iteration 32:  1.0000
+splitting decisions: 
+split level 0: [/input.28, 99] [/345, 36] [/input.12, 155] [/345, 55] [/345, 36] [/345, 35] [/345, 52] [/345, 55] [/247, 181] [/345, 52] 
+Time: prepare 0.0838    bound 2.3004    transfer 0.0002    finalize 0.0200    func 2.4044    
+Accumulated time: func 50.1971    prepare 1.3977    bound 48.1779    transfer 0.0124    finalize 0.6052    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 601
+Time: pickout 0.0038    decision 19.2433    set_bounds 0.0280    solve 2.4045    add 0.0112    
+Accumulated time: pickout 0.0663    decision 364.9448    set_bounds 0.7056    solve 50.2005    add 0.2016    
+Current (lb-rhs): -0.18255938589572906
+1963 domains visited
+Cumulative time: 416.23706793785095
+
+BaB round 33
+batch: 50
+Average branched neurons at iteration 33:  1.0000
+splitting decisions: 
+split level 0: [/345, 59] [/345, 55] [/345, 59] [/input.28, 156] [/345, 55] [/345, 35] [/345, 52] [/input.28, 156] [/345, 36] [/345, 52] 
+Time: prepare 0.0790    bound 2.6447    transfer 0.0002    finalize 0.0275    func 2.7515    
+Accumulated time: func 52.9486    prepare 1.4767    bound 50.8226    transfer 0.0126    finalize 0.6328    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 629
+Time: pickout 0.0040    decision 20.2400    set_bounds 0.0320    solve 2.7516    add 0.0118    
+Accumulated time: pickout 0.0703    decision 385.1847    set_bounds 0.7376    solve 52.9521    add 0.2134    
+Current (lb-rhs): -0.18255938589572906
+2041 domains visited
+Cumulative time: 439.2800691127777
+
+BaB round 34
+batch: 50
+Average branched neurons at iteration 34:  1.0000
+splitting decisions: 
+split level 0: [/345, 35] [/345, 222] [/345, 35] [/input.28, 372] [/247, 181] [/345, 59] [/247, 181] [/345, 35] [/247, 181] [/247, 181] 
+Time: prepare 0.0919    bound 2.8848    transfer 0.0028    finalize 0.0280    func 3.0075    
+Accumulated time: func 55.9562    prepare 1.5686    bound 53.7074    transfer 0.0154    finalize 0.6607    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 673
+Time: pickout 0.0011    decision 21.5790    set_bounds 0.0324    solve 3.0076    add 0.0088    
+Accumulated time: pickout 0.0715    decision 406.7637    set_bounds 0.7700    solve 55.9597    add 0.2223    
+Current (lb-rhs): -0.18255938589572906
+2135 domains visited
+Cumulative time: 463.91263151168823
+
+BaB round 35
+batch: 50
+Average branched neurons at iteration 35:  1.0000
+splitting decisions: 
+split level 0: [/345, 57] [/input.28, 234] [/345, 50] [/247, 181] [/345, 59] [/345, 57] [/247, 236] [/345, 57] [/345, 59] [/345, 50] 
+Time: prepare 0.1116    bound 3.2801    transfer 0.0002    finalize 0.0245    func 3.4164    
+Accumulated time: func 59.3725    prepare 1.6802    bound 56.9874    transfer 0.0156    finalize 0.6852    
+Current worst splitting domains lb-rhs (depth):
+-0.18256 (7), -0.18200 (7), -0.17924 (7), -0.17869 (7), -0.17308 (8), -0.17259 (8), -0.17029 (7), -0.16993 (8), -0.16949 (8), -0.16934 (7), -0.16815 (6), -0.16779 (6), -0.16742 (7), -0.16687 (7), -0.16073 (8), -0.15978 (8), -0.15905 (7), -0.15754 (8), -0.15747 (8), -0.15672 (7), 
+length of domains: 707
+Time: pickout 0.0039    decision 23.0362    set_bounds 0.0358    solve 3.4195    add 0.0088    
+Accumulated time: pickout 0.0754    decision 429.7999    set_bounds 0.8058    solve 59.3792    add 0.2310    
+Current (lb-rhs): -0.18255938589572906
+2219 domains visited
+Time out!!!!!!!!
+Result: unknown in 524.6307 seconds
+############# Summary #############
+Final verified acc: 0.0% (total 1 examples)
+Problem instances count: 1 , total verified (safe/unsat): 0 , total falsified (unsafe/sat): 0 , timeout: 1
+mean time for ALL instances (total 1):524.625421432248, max time: 524.6306676864624
+unknown (total 1), index: [0]

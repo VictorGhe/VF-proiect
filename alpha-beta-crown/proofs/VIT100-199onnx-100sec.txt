@@ -1,0 +1,810 @@
+Configurations:
+
+general:
+  device: cpu
+  seed: 100
+  conv_mode: matrix
+  deterministic: false
+  double_fp: false
+  loss_reduction_func: min
+  sparse_alpha: false
+  sparse_interm: false
+  save_adv_example: false
+  eval_adv_example: false
+  show_adv_example: false
+  precompile_jit: false
+  complete_verifier: bab
+  enable_incomplete_verification: true
+  csv_name: instances.csv
+  results_file: out.txt
+  root_path: ../../vnncomp2023_benchmarks/benchmarks/vit
+  deterministic_opt: false
+  graph_optimizer: 'Customized("custom_graph_optimizer", "default_optimizer")'
+  no_batchdim_buffers: true
+  save_output: false
+  output_file: out.pkl
+model:
+  name: null
+  path: null
+  onnx_path: null
+  onnx_path_prefix: ''
+  cache_onnx_conversion: false
+  debug_onnx: false
+  onnx_quirks: null
+  input_shape: null
+  onnx_loader: default_onnx_and_vnnlib_loader
+  onnx_optimization_flags: none
+  onnx_vnnlib_joint_optimization_flags: none
+  check_optmized: false
+  flatten_final_output: false
+  optimize_graph: null
+data:
+  start: 0
+  end: 10000
+  select_instance: null
+  num_outputs: 10
+  mean: 0.0
+  std: 1.0
+  pkl_path: null
+  dataset: null
+  data_filter_path: null
+  data_idx_file: null
+specification:
+  type: lp
+  robustness_type: verified-acc
+  norm: .inf
+  epsilon: null
+  epsilon_min: 0.0
+  vnnlib_path: null
+  vnnlib_path_prefix: ''
+  rhs_offset: null
+solver:
+  batch_size: 50
+  auto_enlarge_batch_size: false
+  min_batch_size_ratio: 0.0
+  use_float64_in_last_iteration: false
+  early_stop_patience: 10
+  start_save_best: 0.5
+  bound_prop_method: alpha-crown
+  init_bound_prop_method: same
+  prune_after_crown: false
+  crown:
+    batch_size: 1000000000
+    max_crown_size: 1000000000
+  alpha-crown:
+    alpha: true
+    lr_alpha: 0.1
+    iteration: 20
+    share_alphas: false
+    lr_decay: 0.98
+    full_conv_alpha: true
+    max_coeff_mul: .inf
+    matmul_share_alphas: true
+    apply_output_constraints_to: []
+    disable_optimization: [Exp]
+  beta-crown:
+    lr_alpha: 0.01
+    lr_beta: 0.05
+    lr_decay: 0.98
+    optimizer: adam
+    iteration: 10
+    beta: true
+    beta_warmup: true
+    enable_opt_interm_bounds: false
+    all_node_split_LP: false
+  forward:
+    refine: false
+    dynamic: false
+    max_dim: 10000
+  multi_class:
+    label_batch_size: 32
+    skip_with_refined_bound: true
+  mip:
+    parallel_solvers: null
+    solver_threads: 1
+    refine_neuron_timeout: 15
+    refine_neuron_time_percentage: 0.8
+    early_stop: true
+    adv_warmup: true
+    mip_solver: gurobi
+    skip_unsafe: false
+bab:
+  initial_max_domains: 1
+  max_domains: .inf
+  decision_thresh: 0
+  timeout: 360
+  timeout_scale: 1
+  override_timeout: null
+  get_upper_bound: false
+  dfs_percent: 0.0
+  pruning_in_iteration: false
+  pruning_in_iteration_ratio: 0.2
+  sort_targets: false
+  batched_domain_list: true
+  optimized_interm: ''
+  interm_transfer: true
+  recompute_interm: false
+  sort_domain_interval: -1
+  vanilla_crown: false
+  cut:
+    enabled: false
+    implication: false
+    bab_cut: false
+    lp_cut: false
+    method: null
+    lr: 0.01
+    lr_decay: 1.0
+    iteration: 100
+    bab_iteration: -1
+    early_stop_patience: -1
+    lr_beta: 0.02
+    number_cuts: 50
+    topk_cuts_in_filter: 1000
+    batch_size_primal: 100
+    max_num: 1000000000
+    patches_cut: false
+    cplex_cuts: false
+    cplex_cuts_wait: 0
+    cplex_cuts_revpickup: true
+    cut_reference_bounds: true
+    fix_intermediate_bounds: false
+  branching:
+    method: nonlinear
+    candidates: 3
+    reduceop: min
+    enable_intermediate_bound_opt: false
+    branching_input_and_activation: false
+    branching_input_and_activation_order: [input, relu]
+    branching_input_iterations: 30
+    branching_relu_iterations: 50
+    sb_coeff_thresh: 0.001
+    nonlinear_split:
+      method: shortcut
+      branching_point_method: uniform
+      num_branches: 2
+      branching_point_refinement: false
+      filter: false
+      filter_beta: false
+      filter_batch_size: 10000
+      filter_iterations: 25
+      shortlist_size: 500
+      loose_tanh_threshold: null
+    new_input_split:
+      enable: false
+      batch_size: 2
+      rounds: 1
+      init_alpha_batch_size: 8192
+      full_alpha: false
+    input_split:
+      enable: false
+      enhanced_bound_prop_method: alpha-crown
+      enhanced_branching_method: naive
+      enhanced_bound_patience: 100000000.0
+      attack_patience: 100000000.0
+      adv_check: 0
+      split_partitions: 2
+      sb_margin_weight: 1.0
+      sb_primary_spec: null
+      sb_primary_spec_iter: 1
+      sb_sum: false
+      bf_backup_thresh: -1
+      bf_rhs_offset: 0
+      bf_zero_crossing_score: false
+      ibp_enhancement: false
+      catch_assertion: false
+      compare_with_old_bounds: false
+      update_rhs_with_attack: false
+  attack:
+    enabled: false
+    beam_candidates: 8
+    beam_depth: 7
+    max_dive_fix_ratio: 0.8
+    min_local_free_ratio: 0.2
+    mip_start_iteration: 5
+    mip_timeout: 30.0
+    adv_pool_threshold: null
+    refined_mip_attacker: false
+    refined_batch_size: null
+attack:
+  pgd_order: skip
+  pgd_steps: 100
+  pgd_restarts: 30
+  pgd_batch_size: 100000000
+  pgd_early_stop: true
+  pgd_lr_decay: 0.99
+  pgd_alpha: auto
+  pgd_loss_mode: null
+  enable_mip_attack: false
+  adv_saver: default_adv_saver
+  early_stop_condition: default_early_stop_condition
+  adv_example_finalizer: default_adv_example_finalizer
+  pgd_loss: default_pgd_loss
+  cex_path: ./test_cex.txt
+  attack_mode: PGD
+  attack_tolerance: 0.0
+  attack_func: attack_with_general_specs
+  gama_lambda: 10.0
+  gama_decay: 0.9
+  check_clean: false
+  input_split:
+    pgd_steps: 100
+    pgd_restarts: 30
+    pgd_alpha: auto
+  input_split_enhanced:
+    pgd_steps: 200
+    pgd_restarts: 500000
+    pgd_alpha: auto
+  input_split_check_adv:
+    pgd_steps: 5
+    pgd_restarts: 5
+    pgd_alpha: auto
+    max_num_domains: 10
+debug:
+  view_model: false
+  lp_test: null
+  rescale_vnnlib_ptb: null
+  test_optimized_bounds: false
+  test_optimized_bounds_after_n_iterations: 0
+
+Experiments at Thu Jan 18 16:40:05 2024 on mikeVM
+no customized start/end sample, testing all samples in instances.csv
+Internal results will be saved to out.txt.
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% idx: 0, vnnlib ID: 0 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Using onnx onnx/ibp_3_3_8.onnx
+Using vnnlib vnnlib/ibp_3_3_8_6263.vnnlib
+3072 inputs and 10 outputs in vnnlib
+Loading onnx ../../vnncomp2023_benchmarks/benchmarks/vit/onnx/ibp_3_3_8.onnx wih quirks {}
+Sharing alpha due to model size
+Model: BoundedModule(
+  (/input.1): BoundInput(name=/input.1, inputs=[], perturbed=True)
+  (/1): BoundBuffers(name=/1, inputs=[], perturbed=False)
+  (/2): BoundBuffers(name=/2, inputs=[], perturbed=False)
+  (/71): BoundBuffers(name=/71, inputs=[], perturbed=False)
+  (/72): BoundParams(name=/72, inputs=[], perturbed=False)
+  (/73): BoundParams(name=/73, inputs=[], perturbed=False)
+  (/74): BoundBuffers(name=/74, inputs=[], perturbed=False)
+  (/75): BoundBuffers(name=/75, inputs=[], perturbed=False)
+  (/76): BoundBuffers(name=/76, inputs=[], perturbed=False)
+  (/77): BoundBuffers(name=/77, inputs=[], perturbed=False)
+  (/78): BoundParams(name=/78, inputs=[], perturbed=False)
+  (/79): BoundParams(name=/79, inputs=[], perturbed=False)
+  (/80): BoundBuffers(name=/80, inputs=[], perturbed=False)
+  (/81): BoundBuffers(name=/81, inputs=[], perturbed=False)
+  (/83): BoundBuffers(name=/83, inputs=[], perturbed=False)
+  (/84): BoundParams(name=/84, inputs=[], perturbed=False)
+  (/85): BoundParams(name=/85, inputs=[], perturbed=False)
+  (/86): BoundParams(name=/86, inputs=[], perturbed=False)
+  (/87): BoundParams(name=/87, inputs=[], perturbed=False)
+  (/88): BoundParams(name=/88, inputs=[], perturbed=False)
+  (/89): BoundParams(name=/89, inputs=[], perturbed=False)
+  (/90): BoundBuffers(name=/90, inputs=[], perturbed=False)
+  (/91): BoundBuffers(name=/91, inputs=[], perturbed=False)
+  (/92): BoundBuffers(name=/92, inputs=[], perturbed=False)
+  (/93): BoundBuffers(name=/93, inputs=[], perturbed=False)
+  (/94): BoundBuffers(name=/94, inputs=[], perturbed=False)
+  (/95): BoundBuffers(name=/95, inputs=[], perturbed=False)
+  (/96): BoundBuffers(name=/96, inputs=[], perturbed=False)
+  (/97): BoundBuffers(name=/97, inputs=[], perturbed=False)
+  (/98): BoundBuffers(name=/98, inputs=[], perturbed=False)
+  (/99): BoundBuffers(name=/99, inputs=[], perturbed=False)
+  (/100): BoundBuffers(name=/100, inputs=[], perturbed=False)
+  (/101): BoundBuffers(name=/101, inputs=[], perturbed=False)
+  (/102): BoundParams(name=/102, inputs=[], perturbed=False)
+  (/103): BoundParams(name=/103, inputs=[], perturbed=False)
+  (/104): BoundParams(name=/104, inputs=[], perturbed=False)
+  (/105): BoundParams(name=/105, inputs=[], perturbed=False)
+  (/106): BoundBuffers(name=/106, inputs=[], perturbed=False)
+  (/107): BoundBuffers(name=/107, inputs=[], perturbed=False)
+  (/109): BoundParams(name=/109, inputs=[], perturbed=False)
+  (/110): BoundParams(name=/110, inputs=[], perturbed=False)
+  (/111): BoundParams(name=/111, inputs=[], perturbed=False)
+  (/112): BoundParams(name=/112, inputs=[], perturbed=False)
+  (/113): BoundParams(name=/113, inputs=[], perturbed=False)
+  (/114): BoundParams(name=/114, inputs=[], perturbed=False)
+  (/115): BoundBuffers(name=/115, inputs=[], perturbed=False)
+  (/116): BoundBuffers(name=/116, inputs=[], perturbed=False)
+  (/118): BoundBuffers(name=/118, inputs=[], perturbed=False)
+  (/119): BoundParams(name=/119, inputs=[], perturbed=False)
+  (/120): BoundParams(name=/120, inputs=[], perturbed=False)
+  (/121): BoundParams(name=/121, inputs=[], perturbed=False)
+  (/122): BoundParams(name=/122, inputs=[], perturbed=False)
+  (/123): BoundParams(name=/123, inputs=[], perturbed=False)
+  (/124): BoundParams(name=/124, inputs=[], perturbed=False)
+  (/125): BoundBuffers(name=/125, inputs=[], perturbed=False)
+  (/126): BoundBuffers(name=/126, inputs=[], perturbed=False)
+  (/127): BoundBuffers(name=/127, inputs=[], perturbed=False)
+  (/128): BoundBuffers(name=/128, inputs=[], perturbed=False)
+  (/129): BoundBuffers(name=/129, inputs=[], perturbed=False)
+  (/130): BoundBuffers(name=/130, inputs=[], perturbed=False)
+  (/131): BoundBuffers(name=/131, inputs=[], perturbed=False)
+  (/132): BoundBuffers(name=/132, inputs=[], perturbed=False)
+  (/133): BoundBuffers(name=/133, inputs=[], perturbed=False)
+  (/134): BoundBuffers(name=/134, inputs=[], perturbed=False)
+  (/135): BoundBuffers(name=/135, inputs=[], perturbed=False)
+  (/136): BoundBuffers(name=/136, inputs=[], perturbed=False)
+  (/137): BoundParams(name=/137, inputs=[], perturbed=False)
+  (/138): BoundParams(name=/138, inputs=[], perturbed=False)
+  (/139): BoundParams(name=/139, inputs=[], perturbed=False)
+  (/140): BoundParams(name=/140, inputs=[], perturbed=False)
+  (/141): BoundBuffers(name=/141, inputs=[], perturbed=False)
+  (/142): BoundBuffers(name=/142, inputs=[], perturbed=False)
+  (/144): BoundParams(name=/144, inputs=[], perturbed=False)
+  (/145): BoundParams(name=/145, inputs=[], perturbed=False)
+  (/146): BoundParams(name=/146, inputs=[], perturbed=False)
+  (/147): BoundParams(name=/147, inputs=[], perturbed=False)
+  (/148): BoundParams(name=/148, inputs=[], perturbed=False)
+  (/149): BoundParams(name=/149, inputs=[], perturbed=False)
+  (/150): BoundBuffers(name=/150, inputs=[], perturbed=False)
+  (/151): BoundBuffers(name=/151, inputs=[], perturbed=False)
+  (/153): BoundBuffers(name=/153, inputs=[], perturbed=False)
+  (/154): BoundParams(name=/154, inputs=[], perturbed=False)
+  (/155): BoundParams(name=/155, inputs=[], perturbed=False)
+  (/156): BoundParams(name=/156, inputs=[], perturbed=False)
+  (/157): BoundParams(name=/157, inputs=[], perturbed=False)
+  (/158): BoundParams(name=/158, inputs=[], perturbed=False)
+  (/159): BoundParams(name=/159, inputs=[], perturbed=False)
+  (/160): BoundBuffers(name=/160, inputs=[], perturbed=False)
+  (/161): BoundBuffers(name=/161, inputs=[], perturbed=False)
+  (/162): BoundBuffers(name=/162, inputs=[], perturbed=False)
+  (/163): BoundBuffers(name=/163, inputs=[], perturbed=False)
+  (/164): BoundBuffers(name=/164, inputs=[], perturbed=False)
+  (/165): BoundBuffers(name=/165, inputs=[], perturbed=False)
+  (/166): BoundBuffers(name=/166, inputs=[], perturbed=False)
+  (/167): BoundBuffers(name=/167, inputs=[], perturbed=False)
+  (/168): BoundBuffers(name=/168, inputs=[], perturbed=False)
+  (/169): BoundBuffers(name=/169, inputs=[], perturbed=False)
+  (/170): BoundBuffers(name=/170, inputs=[], perturbed=False)
+  (/171): BoundBuffers(name=/171, inputs=[], perturbed=False)
+  (/172): BoundParams(name=/172, inputs=[], perturbed=False)
+  (/173): BoundParams(name=/173, inputs=[], perturbed=False)
+  (/174): BoundParams(name=/174, inputs=[], perturbed=False)
+  (/175): BoundParams(name=/175, inputs=[], perturbed=False)
+  (/176): BoundBuffers(name=/176, inputs=[], perturbed=False)
+  (/177): BoundBuffers(name=/177, inputs=[], perturbed=False)
+  (/179): BoundParams(name=/179, inputs=[], perturbed=False)
+  (/180): BoundParams(name=/180, inputs=[], perturbed=False)
+  (/181): BoundParams(name=/181, inputs=[], perturbed=False)
+  (/182): BoundParams(name=/182, inputs=[], perturbed=False)
+  (/183): BoundParams(name=/183, inputs=[], perturbed=False)
+  (/184): BoundParams(name=/184, inputs=[], perturbed=False)
+  (/185): BoundBuffers(name=/185, inputs=[], perturbed=False)
+  (/186): BoundBuffers(name=/186, inputs=[], perturbed=False)
+  (/188): BoundParams(name=/188, inputs=[], perturbed=False)
+  (/189): BoundParams(name=/189, inputs=[], perturbed=False)
+  (/190): BoundConstant(name=/190, inputs=[], perturbed=False)
+  (/191): BoundCast(name=/191, inputs=[/71], perturbed=False)
+  (/192): BoundConstant(name=/192, value=tensor([1]))
+  (/193): BoundReshape(name=/193, inputs=[/191, /192], perturbed=False)
+  (/194): BoundGather(name=/194, inputs=[/190, /193], perturbed=False)
+  (/195): BoundSqueeze(name=/195, inputs=[/194], perturbed=False)
+  (/196): BoundConv(name=/196, inputs=[/input.1, /72, /73], perturbed=True)
+  (/197): BoundConstant(name=/197, inputs=[], perturbed=False)
+  (/shape): BoundConcat(name=/shape, inputs=[/197, /74], perturbed=False)
+  (/199): BoundSplit(name=/199, inputs=[/shape], perturbed=False)
+  (/200): BoundSplit(name=/200, inputs=[/shape], perturbed=False)
+  (/201): BoundSplit(name=/201, inputs=[/shape], perturbed=False)
+  (/202): BoundSqueeze(name=/202, inputs=[/199], perturbed=False)
+  (/203): BoundSqueeze(name=/203, inputs=[/200], perturbed=False)
+  (/204): BoundSqueeze(name=/204, inputs=[/201], perturbed=False)
+  (/205): BoundUnsqueeze(name=/205, inputs=[/202], perturbed=False)
+  (/206): BoundUnsqueeze(name=/206, inputs=[/203], perturbed=False)
+  (/207): BoundUnsqueeze(name=/207, inputs=[/204], perturbed=False)
+  (/208): BoundConcat(name=/208, inputs=[/205, /206, /207], perturbed=False)
+  (/209): BoundReshape(name=/209, inputs=[/196, /208], perturbed=True)
+  (/210): BoundTranspose(name=/210, inputs=[/209], perturbed=True)
+  (/211): BoundUnsqueeze(name=/211, inputs=[/195], perturbed=False)
+  (/shape.3): BoundConcat(name=/shape.3, inputs=[/211, /75, /76], perturbed=False)
+  (/213): BoundSplit(name=/213, inputs=[/shape.3], perturbed=False)
+  (/214): BoundSplit(name=/214, inputs=[/shape.3], perturbed=False)
+  (/215): BoundSplit(name=/215, inputs=[/shape.3], perturbed=False)
+  (/216): BoundSqueeze(name=/216, inputs=[/213], perturbed=False)
+  (/217): BoundSqueeze(name=/217, inputs=[/214], perturbed=False)
+  (/218): BoundSqueeze(name=/218, inputs=[/215], perturbed=False)
+  (/219): BoundUnsqueeze(name=/219, inputs=[/216], perturbed=False)
+  (/220): BoundUnsqueeze(name=/220, inputs=[/217], perturbed=False)
+  (/221): BoundUnsqueeze(name=/221, inputs=[/218], perturbed=False)
+  (/222): BoundConcat(name=/222, inputs=[/219, /220, /221], perturbed=False)
+  (/223): BoundConstant(name=/223, value=tensor([-1]))
+  (/224): BoundReshape(name=/224, inputs=[/222, /223], perturbed=False)
+  (/225): BoundShape(name=/225, inputs=[/224], perturbed=False)
+  (/226): BoundConstantOfShape(name=/226, inputs=[/225], perturbed=False)
+  (/227): BoundConstant(name=/227, value=-1)
+  (/228): BoundMul(name=/228, inputs=[/226, /227], perturbed=False)
+  (/229): BoundEqual(name=/229, inputs=[/224, /228], perturbed=False)
+  (/230): BoundWhere(name=/230, inputs=[/229, /226, /224], perturbed=False)
+  (/231): BoundExpand(name=/231, inputs=[/77, /230], perturbed=False)
+  (/232): BoundCast(name=/232, inputs=[/231], perturbed=False)
+  (/233): BoundAdd(name=/233, inputs=[/232, /1], perturbed=False)
+  (/234): BoundConcat(name=/234, inputs=[/233, /210], perturbed=True)
+  (/235): BoundAdd(name=/235, inputs=[/234, /2], perturbed=True)
+  (/input): BoundTranspose(name=/input, inputs=[/235], perturbed=True)
+  (/237): BoundBatchNormalization(name=/237, inputs=[/input, /78, /79, /80, /81], perturbed=True)
+  (/238): BoundTranspose(name=/238, inputs=[/237], perturbed=True)
+  (/239): BoundConstant(name=/239, inputs=[], perturbed=False)
+  (/240): BoundCast(name=/240, inputs=[/83], perturbed=False)
+  (/241): BoundConstant(name=/241, value=tensor([1]))
+  (/242): BoundReshape(name=/242, inputs=[/240, /241], perturbed=False)
+  (/243): BoundGather(name=/243, inputs=[/239, /242], perturbed=False)
+  (/244): BoundSqueeze(name=/244, inputs=[/243], perturbed=False)
+  (/245): BoundTranspose(name=/245, inputs=[/84], perturbed=False)
+  (/246): BoundMatMul(name=/246, inputs=[/238, /245], perturbed=True)
+  (/247): BoundAdd(name=/247, inputs=[/85, /246], perturbed=True)
+  (/248): BoundTranspose(name=/248, inputs=[/86], perturbed=False)
+  (/249): BoundMatMul(name=/249, inputs=[/238, /248], perturbed=True)
+  (/250): BoundAdd(name=/250, inputs=[/87, /249], perturbed=True)
+  (/251): BoundTranspose(name=/251, inputs=[/88], perturbed=False)
+  (/252): BoundMatMul(name=/252, inputs=[/238, /251], perturbed=True)
+  (/253): BoundAdd(name=/253, inputs=[/89, /252], perturbed=True)
+  (/254): BoundUnsqueeze(name=/254, inputs=[/244], perturbed=False)
+  (/shape.7): BoundConcat(name=/shape.7, inputs=[/254, /90, /91, /92], perturbed=False)
+  (/shape.11): BoundConcat(name=/shape.11, inputs=[/254, /93, /94, /95], perturbed=False)
+  (/shape.15): BoundConcat(name=/shape.15, inputs=[/254, /96, /97, /98], perturbed=False)
+  (/258): BoundSplit(name=/258, inputs=[/shape.7], perturbed=False)
+  (/259): BoundSplit(name=/259, inputs=[/shape.7], perturbed=False)
+  (/260): BoundSplit(name=/260, inputs=[/shape.7], perturbed=False)
+  (/261): BoundSplit(name=/261, inputs=[/shape.7], perturbed=False)
+  (/262): BoundSqueeze(name=/262, inputs=[/258], perturbed=False)
+  (/263): BoundSqueeze(name=/263, inputs=[/259], perturbed=False)
+  (/264): BoundSqueeze(name=/264, inputs=[/260], perturbed=False)
+  (/265): BoundSqueeze(name=/265, inputs=[/261], perturbed=False)
+  (/266): BoundUnsqueeze(name=/266, inputs=[/262], perturbed=False)
+  (/267): BoundUnsqueeze(name=/267, inputs=[/263], perturbed=False)
+  (/268): BoundUnsqueeze(name=/268, inputs=[/264], perturbed=False)
+  (/269): BoundUnsqueeze(name=/269, inputs=[/265], perturbed=False)
+  (/270): BoundConcat(name=/270, inputs=[/266, /267, /268, /269], perturbed=False)
+  (/271): BoundReshape(name=/271, inputs=[/247, /270], perturbed=True)
+  (/272): BoundTranspose(name=/272, inputs=[/271], perturbed=True)
+  (/273): BoundSplit(name=/273, inputs=[/shape.11], perturbed=False)
+  (/274): BoundSplit(name=/274, inputs=[/shape.11], perturbed=False)
+  (/275): BoundSplit(name=/275, inputs=[/shape.11], perturbed=False)
+  (/276): BoundSplit(name=/276, inputs=[/shape.11], perturbed=False)
+  (/277): BoundSqueeze(name=/277, inputs=[/273], perturbed=False)
+  (/278): BoundSqueeze(name=/278, inputs=[/274], perturbed=False)
+  (/279): BoundSqueeze(name=/279, inputs=[/275], perturbed=False)
+  (/280): BoundSqueeze(name=/280, inputs=[/276], perturbed=False)
+  (/281): BoundUnsqueeze(name=/281, inputs=[/277], perturbed=False)
+  (/282): BoundUnsqueeze(name=/282, inputs=[/278], perturbed=False)
+  (/283): BoundUnsqueeze(name=/283, inputs=[/279], perturbed=False)
+  (/284): BoundUnsqueeze(name=/284, inputs=[/280], perturbed=False)
+  (/285): BoundConcat(name=/285, inputs=[/281, /282, /283, /284], perturbed=False)
+  (/286): BoundReshape(name=/286, inputs=[/250, /285], perturbed=True)
+  (/287): BoundSplit(name=/287, inputs=[/shape.15], perturbed=False)
+  (/288): BoundSplit(name=/288, inputs=[/shape.15], perturbed=False)
+  (/289): BoundSplit(name=/289, inputs=[/shape.15], perturbed=False)
+  (/290): BoundSplit(name=/290, inputs=[/shape.15], perturbed=False)
+  (/291): BoundSqueeze(name=/291, inputs=[/287], perturbed=False)
+  (/292): BoundSqueeze(name=/292, inputs=[/288], perturbed=False)
+  (/293): BoundSqueeze(name=/293, inputs=[/289], perturbed=False)
+  (/294): BoundSqueeze(name=/294, inputs=[/290], perturbed=False)
+  (/295): BoundUnsqueeze(name=/295, inputs=[/291], perturbed=False)
+  (/296): BoundUnsqueeze(name=/296, inputs=[/292], perturbed=False)
+  (/297): BoundUnsqueeze(name=/297, inputs=[/293], perturbed=False)
+  (/298): BoundUnsqueeze(name=/298, inputs=[/294], perturbed=False)
+  (/299): BoundConcat(name=/299, inputs=[/295, /296, /297, /298], perturbed=False)
+  (/300): BoundReshape(name=/300, inputs=[/253, /299], perturbed=True)
+  (/301): BoundTranspose(name=/301, inputs=[/300], perturbed=True)
+  (/302): BoundTranspose(name=/302, inputs=[/286], perturbed=True)
+  (/303): BoundMatMul(name=/303, inputs=[/272, /302], perturbed=True)
+  (/input.4): BoundMul(name=/input.4, inputs=[/303, /99], perturbed=True)
+  (/306): BoundMatMul(name=/306, inputs=[/305/mul, /301], perturbed=True)
+  (/307): BoundTranspose(name=/307, inputs=[/306], perturbed=True)
+  (/shape.19): BoundConcat(name=/shape.19, inputs=[/254, /100, /101], perturbed=False)
+  (/309): BoundSplit(name=/309, inputs=[/shape.19], perturbed=False)
+  (/310): BoundSplit(name=/310, inputs=[/shape.19], perturbed=False)
+  (/311): BoundSplit(name=/311, inputs=[/shape.19], perturbed=False)
+  (/312): BoundSqueeze(name=/312, inputs=[/309], perturbed=False)
+  (/313): BoundSqueeze(name=/313, inputs=[/310], perturbed=False)
+  (/314): BoundSqueeze(name=/314, inputs=[/311], perturbed=False)
+  (/315): BoundUnsqueeze(name=/315, inputs=[/312], perturbed=False)
+  (/316): BoundUnsqueeze(name=/316, inputs=[/313], perturbed=False)
+  (/317): BoundUnsqueeze(name=/317, inputs=[/314], perturbed=False)
+  (/318): BoundConcat(name=/318, inputs=[/315, /316, /317], perturbed=False)
+  (/319): BoundReshape(name=/319, inputs=[/307, /318], perturbed=True)
+  (/320): BoundTranspose(name=/320, inputs=[/102], perturbed=False)
+  (/321): BoundMatMul(name=/321, inputs=[/319, /320], perturbed=True)
+  (/322): BoundAdd(name=/322, inputs=[/103, /321], perturbed=True)
+  (/323): BoundAdd(name=/323, inputs=[/322, /235], perturbed=True)
+  (/input.8): BoundTranspose(name=/input.8, inputs=[/323], perturbed=True)
+  (/325): BoundBatchNormalization(name=/325, inputs=[/input.8, /104, /105, /106, /107], perturbed=True)
+  (/326): BoundTranspose(name=/326, inputs=[/325], perturbed=True)
+  (/327): BoundTranspose(name=/327, inputs=[/109], perturbed=False)
+  (/328): BoundMatMul(name=/328, inputs=[/326, /327], perturbed=True)
+  (/input.12): BoundAdd(name=/input.12, inputs=[/110, /328], perturbed=True)
+  (/330): BoundRelu(name=/330, inputs=[/input.12], perturbed=True)
+  (/331): BoundTranspose(name=/331, inputs=[/111], perturbed=False)
+  (/332): BoundMatMul(name=/332, inputs=[/330, /331], perturbed=True)
+  (/333): BoundAdd(name=/333, inputs=[/112, /332], perturbed=True)
+  (/334): BoundAdd(name=/334, inputs=[/333, /323], perturbed=True)
+  (/input.16): BoundTranspose(name=/input.16, inputs=[/334], perturbed=True)
+  (/336): BoundBatchNormalization(name=/336, inputs=[/input.16, /113, /114, /115, /116], perturbed=True)
+  (/337): BoundTranspose(name=/337, inputs=[/336], perturbed=True)
+  (/338): BoundCast(name=/338, inputs=[/118], perturbed=False)
+  (/339): BoundConstant(name=/339, value=tensor([1]))
+  (/340): BoundReshape(name=/340, inputs=[/338, /339], perturbed=False)
+  (/341): BoundGather(name=/341, inputs=[/239, /340], perturbed=False)
+  (/342): BoundSqueeze(name=/342, inputs=[/341], perturbed=False)
+  (/343): BoundTranspose(name=/343, inputs=[/119], perturbed=False)
+  (/344): BoundMatMul(name=/344, inputs=[/337, /343], perturbed=True)
+  (/345): BoundAdd(name=/345, inputs=[/120, /344], perturbed=True)
+  (/346): BoundTranspose(name=/346, inputs=[/121], perturbed=False)
+  (/347): BoundMatMul(name=/347, inputs=[/337, /346], perturbed=True)
+  (/348): BoundAdd(name=/348, inputs=[/122, /347], perturbed=True)
+  (/349): BoundTranspose(name=/349, inputs=[/123], perturbed=False)
+  (/350): BoundMatMul(name=/350, inputs=[/337, /349], perturbed=True)
+  (/351): BoundAdd(name=/351, inputs=[/124, /350], perturbed=True)
+  (/352): BoundUnsqueeze(name=/352, inputs=[/342], perturbed=False)
+  (/shape.23): BoundConcat(name=/shape.23, inputs=[/352, /125, /126, /127], perturbed=False)
+  (/shape.27): BoundConcat(name=/shape.27, inputs=[/352, /128, /129, /130], perturbed=False)
+  (/shape.31): BoundConcat(name=/shape.31, inputs=[/352, /131, /132, /133], perturbed=False)
+  (/356): BoundSplit(name=/356, inputs=[/shape.23], perturbed=False)
+  (/357): BoundSplit(name=/357, inputs=[/shape.23], perturbed=False)
+  (/358): BoundSplit(name=/358, inputs=[/shape.23], perturbed=False)
+  (/359): BoundSplit(name=/359, inputs=[/shape.23], perturbed=False)
+  (/360): BoundSqueeze(name=/360, inputs=[/356], perturbed=False)
+  (/361): BoundSqueeze(name=/361, inputs=[/357], perturbed=False)
+  (/362): BoundSqueeze(name=/362, inputs=[/358], perturbed=False)
+  (/363): BoundSqueeze(name=/363, inputs=[/359], perturbed=False)
+  (/364): BoundUnsqueeze(name=/364, inputs=[/360], perturbed=False)
+  (/365): BoundUnsqueeze(name=/365, inputs=[/361], perturbed=False)
+  (/366): BoundUnsqueeze(name=/366, inputs=[/362], perturbed=False)
+  (/367): BoundUnsqueeze(name=/367, inputs=[/363], perturbed=False)
+  (/368): BoundConcat(name=/368, inputs=[/364, /365, /366, /367], perturbed=False)
+  (/369): BoundReshape(name=/369, inputs=[/345, /368], perturbed=True)
+  (/370): BoundTranspose(name=/370, inputs=[/369], perturbed=True)
+  (/371): BoundSplit(name=/371, inputs=[/shape.27], perturbed=False)
+  (/372): BoundSplit(name=/372, inputs=[/shape.27], perturbed=False)
+  (/373): BoundSplit(name=/373, inputs=[/shape.27], perturbed=False)
+  (/374): BoundSplit(name=/374, inputs=[/shape.27], perturbed=False)
+  (/375): BoundSqueeze(name=/375, inputs=[/371], perturbed=False)
+  (/376): BoundSqueeze(name=/376, inputs=[/372], perturbed=False)
+  (/377): BoundSqueeze(name=/377, inputs=[/373], perturbed=False)
+  (/378): BoundSqueeze(name=/378, inputs=[/374], perturbed=False)
+  (/379): BoundUnsqueeze(name=/379, inputs=[/375], perturbed=False)
+  (/380): BoundUnsqueeze(name=/380, inputs=[/376], perturbed=False)
+  (/381): BoundUnsqueeze(name=/381, inputs=[/377], perturbed=False)
+  (/382): BoundUnsqueeze(name=/382, inputs=[/378], perturbed=False)
+  (/383): BoundConcat(name=/383, inputs=[/379, /380, /381, /382], perturbed=False)
+  (/384): BoundReshape(name=/384, inputs=[/348, /383], perturbed=True)
+  (/385): BoundSplit(name=/385, inputs=[/shape.31], perturbed=False)
+  (/386): BoundSplit(name=/386, inputs=[/shape.31], perturbed=False)
+  (/387): BoundSplit(name=/387, inputs=[/shape.31], perturbed=False)
+  (/388): BoundSplit(name=/388, inputs=[/shape.31], perturbed=False)
+  (/389): BoundSqueeze(name=/389, inputs=[/385], perturbed=False)
+  (/390): BoundSqueeze(name=/390, inputs=[/386], perturbed=False)
+  (/391): BoundSqueeze(name=/391, inputs=[/387], perturbed=False)
+  (/392): BoundSqueeze(name=/392, inputs=[/388], perturbed=False)
+  (/393): BoundUnsqueeze(name=/393, inputs=[/389], perturbed=False)
+  (/394): BoundUnsqueeze(name=/394, inputs=[/390], perturbed=False)
+  (/395): BoundUnsqueeze(name=/395, inputs=[/391], perturbed=False)
+  (/396): BoundUnsqueeze(name=/396, inputs=[/392], perturbed=False)
+  (/397): BoundConcat(name=/397, inputs=[/393, /394, /395, /396], perturbed=False)
+  (/398): BoundReshape(name=/398, inputs=[/351, /397], perturbed=True)
+  (/399): BoundTranspose(name=/399, inputs=[/398], perturbed=True)
+  (/400): BoundTranspose(name=/400, inputs=[/384], perturbed=True)
+  (/401): BoundMatMul(name=/401, inputs=[/370, /400], perturbed=True)
+  (/input.20): BoundMul(name=/input.20, inputs=[/401, /134], perturbed=True)
+  (/404): BoundMatMul(name=/404, inputs=[/403/mul, /399], perturbed=True)
+  (/405): BoundTranspose(name=/405, inputs=[/404], perturbed=True)
+  (/shape.35): BoundConcat(name=/shape.35, inputs=[/352, /135, /136], perturbed=False)
+  (/407): BoundSplit(name=/407, inputs=[/shape.35], perturbed=False)
+  (/408): BoundSplit(name=/408, inputs=[/shape.35], perturbed=False)
+  (/409): BoundSplit(name=/409, inputs=[/shape.35], perturbed=False)
+  (/410): BoundSqueeze(name=/410, inputs=[/407], perturbed=False)
+  (/411): BoundSqueeze(name=/411, inputs=[/408], perturbed=False)
+  (/412): BoundSqueeze(name=/412, inputs=[/409], perturbed=False)
+  (/413): BoundUnsqueeze(name=/413, inputs=[/410], perturbed=False)
+  (/414): BoundUnsqueeze(name=/414, inputs=[/411], perturbed=False)
+  (/415): BoundUnsqueeze(name=/415, inputs=[/412], perturbed=False)
+  (/416): BoundConcat(name=/416, inputs=[/413, /414, /415], perturbed=False)
+  (/417): BoundReshape(name=/417, inputs=[/405, /416], perturbed=True)
+  (/418): BoundTranspose(name=/418, inputs=[/137], perturbed=False)
+  (/419): BoundMatMul(name=/419, inputs=[/417, /418], perturbed=True)
+  (/420): BoundAdd(name=/420, inputs=[/138, /419], perturbed=True)
+  (/421): BoundAdd(name=/421, inputs=[/420, /334], perturbed=True)
+  (/input.24): BoundTranspose(name=/input.24, inputs=[/421], perturbed=True)
+  (/423): BoundBatchNormalization(name=/423, inputs=[/input.24, /139, /140, /141, /142], perturbed=True)
+  (/424): BoundTranspose(name=/424, inputs=[/423], perturbed=True)
+  (/425): BoundTranspose(name=/425, inputs=[/144], perturbed=False)
+  (/426): BoundMatMul(name=/426, inputs=[/424, /425], perturbed=True)
+  (/input.28): BoundAdd(name=/input.28, inputs=[/145, /426], perturbed=True)
+  (/428): BoundRelu(name=/428, inputs=[/input.28], perturbed=True)
+  (/429): BoundTranspose(name=/429, inputs=[/146], perturbed=False)
+  (/430): BoundMatMul(name=/430, inputs=[/428, /429], perturbed=True)
+  (/431): BoundAdd(name=/431, inputs=[/147, /430], perturbed=True)
+  (/432): BoundAdd(name=/432, inputs=[/431, /421], perturbed=True)
+  (/input.32): BoundTranspose(name=/input.32, inputs=[/432], perturbed=True)
+  (/434): BoundBatchNormalization(name=/434, inputs=[/input.32, /148, /149, /150, /151], perturbed=True)
+  (/435): BoundTranspose(name=/435, inputs=[/434], perturbed=True)
+  (/436): BoundCast(name=/436, inputs=[/153], perturbed=False)
+  (/437): BoundConstant(name=/437, value=tensor([1]))
+  (/438): BoundReshape(name=/438, inputs=[/436, /437], perturbed=False)
+  (/439): BoundGather(name=/439, inputs=[/239, /438], perturbed=False)
+  (/440): BoundSqueeze(name=/440, inputs=[/439], perturbed=False)
+  (/441): BoundTranspose(name=/441, inputs=[/154], perturbed=False)
+  (/442): BoundMatMul(name=/442, inputs=[/435, /441], perturbed=True)
+  (/443): BoundAdd(name=/443, inputs=[/155, /442], perturbed=True)
+  (/444): BoundTranspose(name=/444, inputs=[/156], perturbed=False)
+  (/445): BoundMatMul(name=/445, inputs=[/435, /444], perturbed=True)
+  (/446): BoundAdd(name=/446, inputs=[/157, /445], perturbed=True)
+  (/447): BoundTranspose(name=/447, inputs=[/158], perturbed=False)
+  (/448): BoundMatMul(name=/448, inputs=[/435, /447], perturbed=True)
+  (/449): BoundAdd(name=/449, inputs=[/159, /448], perturbed=True)
+  (/450): BoundUnsqueeze(name=/450, inputs=[/440], perturbed=False)
+  (/shape.39): BoundConcat(name=/shape.39, inputs=[/450, /160, /161, /162], perturbed=False)
+  (/shape.43): BoundConcat(name=/shape.43, inputs=[/450, /163, /164, /165], perturbed=False)
+  (/shape.47): BoundConcat(name=/shape.47, inputs=[/450, /166, /167, /168], perturbed=False)
+  (/454): BoundSplit(name=/454, inputs=[/shape.39], perturbed=False)
+  (/455): BoundSplit(name=/455, inputs=[/shape.39], perturbed=False)
+  (/456): BoundSplit(name=/456, inputs=[/shape.39], perturbed=False)
+  (/457): BoundSplit(name=/457, inputs=[/shape.39], perturbed=False)
+  (/458): BoundSqueeze(name=/458, inputs=[/454], perturbed=False)
+  (/459): BoundSqueeze(name=/459, inputs=[/455], perturbed=False)
+  (/460): BoundSqueeze(name=/460, inputs=[/456], perturbed=False)
+  (/461): BoundSqueeze(name=/461, inputs=[/457], perturbed=False)
+  (/462): BoundUnsqueeze(name=/462, inputs=[/458], perturbed=False)
+  (/463): BoundUnsqueeze(name=/463, inputs=[/459], perturbed=False)
+  (/464): BoundUnsqueeze(name=/464, inputs=[/460], perturbed=False)
+  (/465): BoundUnsqueeze(name=/465, inputs=[/461], perturbed=False)
+  (/466): BoundConcat(name=/466, inputs=[/462, /463, /464, /465], perturbed=False)
+  (/467): BoundReshape(name=/467, inputs=[/443, /466], perturbed=True)
+  (/468): BoundTranspose(name=/468, inputs=[/467], perturbed=True)
+  (/469): BoundSplit(name=/469, inputs=[/shape.43], perturbed=False)
+  (/470): BoundSplit(name=/470, inputs=[/shape.43], perturbed=False)
+  (/471): BoundSplit(name=/471, inputs=[/shape.43], perturbed=False)
+  (/472): BoundSplit(name=/472, inputs=[/shape.43], perturbed=False)
+  (/473): BoundSqueeze(name=/473, inputs=[/469], perturbed=False)
+  (/474): BoundSqueeze(name=/474, inputs=[/470], perturbed=False)
+  (/475): BoundSqueeze(name=/475, inputs=[/471], perturbed=False)
+  (/476): BoundSqueeze(name=/476, inputs=[/472], perturbed=False)
+  (/477): BoundUnsqueeze(name=/477, inputs=[/473], perturbed=False)
+  (/478): BoundUnsqueeze(name=/478, inputs=[/474], perturbed=False)
+  (/479): BoundUnsqueeze(name=/479, inputs=[/475], perturbed=False)
+  (/480): BoundUnsqueeze(name=/480, inputs=[/476], perturbed=False)
+  (/481): BoundConcat(name=/481, inputs=[/477, /478, /479, /480], perturbed=False)
+  (/482): BoundReshape(name=/482, inputs=[/446, /481], perturbed=True)
+  (/483): BoundSplit(name=/483, inputs=[/shape.47], perturbed=False)
+  (/484): BoundSplit(name=/484, inputs=[/shape.47], perturbed=False)
+  (/485): BoundSplit(name=/485, inputs=[/shape.47], perturbed=False)
+  (/486): BoundSplit(name=/486, inputs=[/shape.47], perturbed=False)
+  (/487): BoundSqueeze(name=/487, inputs=[/483], perturbed=False)
+  (/488): BoundSqueeze(name=/488, inputs=[/484], perturbed=False)
+  (/489): BoundSqueeze(name=/489, inputs=[/485], perturbed=False)
+  (/490): BoundSqueeze(name=/490, inputs=[/486], perturbed=False)
+  (/491): BoundUnsqueeze(name=/491, inputs=[/487], perturbed=False)
+  (/492): BoundUnsqueeze(name=/492, inputs=[/488], perturbed=False)
+  (/493): BoundUnsqueeze(name=/493, inputs=[/489], perturbed=False)
+  (/494): BoundUnsqueeze(name=/494, inputs=[/490], perturbed=False)
+  (/495): BoundConcat(name=/495, inputs=[/491, /492, /493, /494], perturbed=False)
+  (/496): BoundReshape(name=/496, inputs=[/449, /495], perturbed=True)
+  (/497): BoundTranspose(name=/497, inputs=[/496], perturbed=True)
+  (/498): BoundTranspose(name=/498, inputs=[/482], perturbed=True)
+  (/499): BoundMatMul(name=/499, inputs=[/468, /498], perturbed=True)
+  (/input.36): BoundMul(name=/input.36, inputs=[/499, /169], perturbed=True)
+  (/502): BoundMatMul(name=/502, inputs=[/501/mul, /497], perturbed=True)
+  (/503): BoundTranspose(name=/503, inputs=[/502], perturbed=True)
+  (/shape.51): BoundConcat(name=/shape.51, inputs=[/450, /170, /171], perturbed=False)
+  (/505): BoundSplit(name=/505, inputs=[/shape.51], perturbed=False)
+  (/506): BoundSplit(name=/506, inputs=[/shape.51], perturbed=False)
+  (/507): BoundSplit(name=/507, inputs=[/shape.51], perturbed=False)
+  (/508): BoundSqueeze(name=/508, inputs=[/505], perturbed=False)
+  (/509): BoundSqueeze(name=/509, inputs=[/506], perturbed=False)
+  (/510): BoundSqueeze(name=/510, inputs=[/507], perturbed=False)
+  (/511): BoundUnsqueeze(name=/511, inputs=[/508], perturbed=False)
+  (/512): BoundUnsqueeze(name=/512, inputs=[/509], perturbed=False)
+  (/513): BoundUnsqueeze(name=/513, inputs=[/510], perturbed=False)
+  (/514): BoundConcat(name=/514, inputs=[/511, /512, /513], perturbed=False)
+  (/515): BoundReshape(name=/515, inputs=[/503, /514], perturbed=True)
+  (/516): BoundTranspose(name=/516, inputs=[/172], perturbed=False)
+  (/517): BoundMatMul(name=/517, inputs=[/515, /516], perturbed=True)
+  (/518): BoundAdd(name=/518, inputs=[/173, /517], perturbed=True)
+  (/519): BoundAdd(name=/519, inputs=[/518, /432], perturbed=True)
+  (/input.40): BoundTranspose(name=/input.40, inputs=[/519], perturbed=True)
+  (/521): BoundBatchNormalization(name=/521, inputs=[/input.40, /174, /175, /176, /177], perturbed=True)
+  (/522): BoundTranspose(name=/522, inputs=[/521], perturbed=True)
+  (/523): BoundTranspose(name=/523, inputs=[/179], perturbed=False)
+  (/524): BoundMatMul(name=/524, inputs=[/522, /523], perturbed=True)
+  (/input.44): BoundAdd(name=/input.44, inputs=[/180, /524], perturbed=True)
+  (/526): BoundRelu(name=/526, inputs=[/input.44], perturbed=True)
+  (/527): BoundTranspose(name=/527, inputs=[/181], perturbed=False)
+  (/528): BoundMatMul(name=/528, inputs=[/526, /527], perturbed=True)
+  (/529): BoundAdd(name=/529, inputs=[/182, /528], perturbed=True)
+  (/530): BoundAdd(name=/530, inputs=[/529, /519], perturbed=True)
+  (/input.48): BoundReduceMean(name=/input.48, inputs=[/530], perturbed=True)
+  (/532): BoundBatchNormalization(name=/532, inputs=[/input.48, /183, /184, /185, /186], perturbed=True)
+  (/533): BoundLinear(name=/533, inputs=[/532, /188, /189], perturbed=True)
+  (/305/split/1): BoundReduceMax(name=/305/split/1, inputs=[/input.4], perturbed=True)
+  (/305/split/2): BoundUnsqueeze(name=/305/split/2, inputs=[/305/split/1], perturbed=True)
+  (/305/split/3): BoundSub(name=/305/split/3, inputs=[/input.4, /305/split/2], perturbed=True)
+  (/305/split/4): BoundExp(name=/305/split/4, inputs=[/305/split/3], perturbed=True)
+  (/305/split/5): BoundReduceSum(name=/305/split/5, inputs=[/305/split/4], perturbed=True)
+  (/403/split/1): BoundReduceMax(name=/403/split/1, inputs=[/input.20], perturbed=True)
+  (/403/split/2): BoundUnsqueeze(name=/403/split/2, inputs=[/403/split/1], perturbed=True)
+  (/403/split/3): BoundSub(name=/403/split/3, inputs=[/input.20, /403/split/2], perturbed=True)
+  (/403/split/4): BoundExp(name=/403/split/4, inputs=[/403/split/3], perturbed=True)
+  (/403/split/5): BoundReduceSum(name=/403/split/5, inputs=[/403/split/4], perturbed=True)
+  (/501/split/1): BoundReduceMax(name=/501/split/1, inputs=[/input.36], perturbed=True)
+  (/501/split/2): BoundUnsqueeze(name=/501/split/2, inputs=[/501/split/1], perturbed=True)
+  (/501/split/3): BoundSub(name=/501/split/3, inputs=[/input.36, /501/split/2], perturbed=True)
+  (/501/split/4): BoundExp(name=/501/split/4, inputs=[/501/split/3], perturbed=True)
+  (/501/split/5): BoundReduceSum(name=/501/split/5, inputs=[/501/split/4], perturbed=True)
+  (/305/reciprocal): BoundReciprocal(name=/305/reciprocal, inputs=[/305/split/5], perturbed=True)
+  (/305/mul): BoundMul(name=/305/mul, inputs=[/305/split/4, /305/reciprocal], perturbed=True)
+  (/403/reciprocal): BoundReciprocal(name=/403/reciprocal, inputs=[/403/split/5], perturbed=True)
+  (/403/mul): BoundMul(name=/403/mul, inputs=[/403/split/4, /403/reciprocal], perturbed=True)
+  (/501/reciprocal): BoundReciprocal(name=/501/reciprocal, inputs=[/501/split/5], perturbed=True)
+  (/501/mul): BoundMul(name=/501/mul, inputs=[/501/split/4, /501/reciprocal], perturbed=True)
+)
+Original output: tensor([[ 0.54276103, -1.82585454,  2.16173100, -0.37036830,  1.76865530,
+         -0.22220853, -0.80926490,  0.81687397, -1.05665112, -0.60422146]])
+Split layers:
+  BoundTranspose(name=/272, inputs=[/271], perturbed=True): [(BoundMatMul(name=/303, inputs=[/272, /302], perturbed=True), 0)]
+  BoundTranspose(name=/302, inputs=[/286], perturbed=True): [(BoundMatMul(name=/303, inputs=[/272, /302], perturbed=True), 1)]
+  BoundMul(name=/305/mul, inputs=[/305/split/4, /305/reciprocal], perturbed=True): [(BoundMatMul(name=/306, inputs=[/305/mul, /301], perturbed=True), 0)]
+  BoundTranspose(name=/301, inputs=[/300], perturbed=True): [(BoundMatMul(name=/306, inputs=[/305/mul, /301], perturbed=True), 1)]
+  BoundAdd(name=/input.12, inputs=[/110, /328], perturbed=True): [(BoundRelu(name=/330, inputs=[/input.12], perturbed=True), 0)]
+  BoundTranspose(name=/370, inputs=[/369], perturbed=True): [(BoundMatMul(name=/401, inputs=[/370, /400], perturbed=True), 0)]
+  BoundTranspose(name=/400, inputs=[/384], perturbed=True): [(BoundMatMul(name=/401, inputs=[/370, /400], perturbed=True), 1)]
+  BoundMul(name=/403/mul, inputs=[/403/split/4, /403/reciprocal], perturbed=True): [(BoundMatMul(name=/404, inputs=[/403/mul, /399], perturbed=True), 0)]
+  BoundTranspose(name=/399, inputs=[/398], perturbed=True): [(BoundMatMul(name=/404, inputs=[/403/mul, /399], perturbed=True), 1)]
+  BoundAdd(name=/input.28, inputs=[/145, /426], perturbed=True): [(BoundRelu(name=/428, inputs=[/input.28], perturbed=True), 0)]
+  BoundTranspose(name=/468, inputs=[/467], perturbed=True): [(BoundMatMul(name=/499, inputs=[/468, /498], perturbed=True), 0)]
+  BoundTranspose(name=/498, inputs=[/482], perturbed=True): [(BoundMatMul(name=/499, inputs=[/468, /498], perturbed=True), 1)]
+  BoundMul(name=/501/mul, inputs=[/501/split/4, /501/reciprocal], perturbed=True): [(BoundMatMul(name=/502, inputs=[/501/mul, /497], perturbed=True), 0)]
+  BoundTranspose(name=/497, inputs=[/496], perturbed=True): [(BoundMatMul(name=/502, inputs=[/501/mul, /497], perturbed=True), 1)]
+  BoundAdd(name=/input.44, inputs=[/180, /524], perturbed=True): [(BoundRelu(name=/526, inputs=[/input.44], perturbed=True), 0)]
+  BoundReduceSum(name=/305/split/5, inputs=[/305/split/4], perturbed=True): [(BoundReciprocal(name=/305/reciprocal, inputs=[/305/split/5], perturbed=True), 0)]
+  BoundExp(name=/305/split/4, inputs=[/305/split/3], perturbed=True): [(BoundMul(name=/305/mul, inputs=[/305/split/4, /305/reciprocal], perturbed=True), 0)]
+  BoundReciprocal(name=/305/reciprocal, inputs=[/305/split/5], perturbed=True): [(BoundMul(name=/305/mul, inputs=[/305/split/4, /305/reciprocal], perturbed=True), 1)]
+  BoundReduceSum(name=/403/split/5, inputs=[/403/split/4], perturbed=True): [(BoundReciprocal(name=/403/reciprocal, inputs=[/403/split/5], perturbed=True), 0)]
+  BoundExp(name=/403/split/4, inputs=[/403/split/3], perturbed=True): [(BoundMul(name=/403/mul, inputs=[/403/split/4, /403/reciprocal], perturbed=True), 0)]
+  BoundReciprocal(name=/403/reciprocal, inputs=[/403/split/5], perturbed=True): [(BoundMul(name=/403/mul, inputs=[/403/split/4, /403/reciprocal], perturbed=True), 1)]
+  BoundReduceSum(name=/501/split/5, inputs=[/501/split/4], perturbed=True): [(BoundReciprocal(name=/501/reciprocal, inputs=[/501/split/5], perturbed=True), 0)]
+  BoundExp(name=/501/split/4, inputs=[/501/split/3], perturbed=True): [(BoundMul(name=/501/mul, inputs=[/501/split/4, /501/reciprocal], perturbed=True), 0)]
+  BoundReciprocal(name=/501/reciprocal, inputs=[/501/split/5], perturbed=True): [(BoundMul(name=/501/mul, inputs=[/501/split/4, /501/reciprocal], perturbed=True), 1)]
+Nonlinear functions:
+   BoundMatMul(name=/303, inputs=[/272, /302], perturbed=True)
+   BoundMatMul(name=/306, inputs=[/305/mul, /301], perturbed=True)
+   BoundRelu(name=/330, inputs=[/input.12], perturbed=True)
+   BoundMatMul(name=/401, inputs=[/370, /400], perturbed=True)
+   BoundMatMul(name=/404, inputs=[/403/mul, /399], perturbed=True)
+   BoundRelu(name=/428, inputs=[/input.28], perturbed=True)
+   BoundMatMul(name=/499, inputs=[/468, /498], perturbed=True)
+   BoundMatMul(name=/502, inputs=[/501/mul, /497], perturbed=True)
+   BoundRelu(name=/526, inputs=[/input.44], perturbed=True)
+   BoundExp(name=/305/split/4, inputs=[/305/split/3], perturbed=True)
+   BoundExp(name=/403/split/4, inputs=[/403/split/3], perturbed=True)
+   BoundExp(name=/501/split/4, inputs=[/501/split/3], perturbed=True)
+   BoundReciprocal(name=/305/reciprocal, inputs=[/305/split/5], perturbed=True)
+   BoundMul(name=/305/mul, inputs=[/305/split/4, /305/reciprocal], perturbed=True)
+   BoundReciprocal(name=/403/reciprocal, inputs=[/403/split/5], perturbed=True)
+   BoundMul(name=/403/mul, inputs=[/403/split/4, /403/reciprocal], perturbed=True)
+   BoundReciprocal(name=/501/reciprocal, inputs=[/501/split/5], perturbed=True)
+   BoundMul(name=/501/mul, inputs=[/501/split/4, /501/reciprocal], perturbed=True)
+layer /330 start_node /370 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /400 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /403/split/3 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /403/split/5 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /403/split/4 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /403/reciprocal using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /403/mul using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /399 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /input.28 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /468 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /498 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /501/split/3 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /501/split/5 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /501/split/4 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /501/reciprocal using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /501/mul using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /497 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /input.44 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /330 start_node /533 using full alpha [2, 9, 1, 17, 96] with unstable size None total_size 9 output_shape 9
+layer /428 start_node /468 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /428 start_node /498 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /428 start_node /501/split/3 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /428 start_node /501/split/5 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /428 start_node /501/split/4 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /428 start_node /501/reciprocal using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /428 start_node /501/mul using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
+layer /428 start_node /497 using full alpha [2, 1, 1, 17, 96] with unstable size None total_size 1 output_shape 1
