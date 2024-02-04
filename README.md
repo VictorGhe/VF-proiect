@@ -6,3 +6,31 @@ Tools:
 1. Alpha-beta-crown: https://github.com/Verified-Intelligence/alpha-beta-CROWN
 
 2. PyRat https://github.com/ChristopherBrix/vnncomp2023_results/tree/main/pyrat
+
+Saptamana 9
+
+Am examinat materialele prezentate în curs pentru a determina ce set de date și instrumente vom folosi. În urma acestei revizuiri, am selectat instrumentele alpha-beta-crown și pyrat, iar pentru evaluarea comparativă am optat pentru ViT (Vision Transformer).
+
+În etapele următoare:
+
+-Am consultat documentația oficială a alpha-beta crown pentru a înțelege cum se instalează acest instrument;
+-Am evaluat benchmark-ul care va fi utilizat cu alpha-beta crown, pentru a compara rezultatele cu cele obținute în cadrul unei competiții recent încheiate.
+
+Saptamana 10
+
+Instalarea tool-ului mentionat mai sus pe Linux si pe Mac OS.
+Rezolvarea erorilor intampinate.
+
+Saptamana 11
+
+Testarea tool-ului alpha-beta-crown cu succes pe sistemul de operare Linux, folosind configuratia cifar_resnet_2b.yaml
+
+Saptamana 12
+
+Rularea tool-ului asupra benchmark-ului si obtinerea rezultatelor
+Datorita lipsei unei placi grafice CUDA pe masina virtuala, am fost nevoiti sa rulam pe baza CPU host-ului.
+Realizarea draft-ului.
+
+Saptamana 13 & 14
+
+Esuarea instalarii tool-urilor Marabou, PyRaT datorita arhitecturii hardware-ului (M1 silicon).
