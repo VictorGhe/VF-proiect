@@ -34,3 +34,7 @@ Realizarea draft-ului.
 Saptamana 13 & 14
 
 Esuarea instalarii tool-urilor Marabou, PyRaT datorita arhitecturii hardware-ului (M1 silicon).
+
+Saptamana 5-11 Febr
+5 Febr: Am schimbat scopul proiectului, collins_rul_cnn + alpha beta CROWN & NeuralSAT
+6 Febr: Am esuat instalarea NeuralSAT pe arhitectura ARM, dar am reusit intalarea pe un laptop alternativ. S-a rulat primul onnx si vnnlib de test, rezultat cu succes.
