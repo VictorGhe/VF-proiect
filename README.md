@@ -1,11 +1,11 @@
 # VF-proiect
 
-Benchmark ViT: https://github.com/ChristopherBrix/vnncomp2023_benchmarks/tree/main/benchmarks/vit
+Benchmark Collins Rul CNN: https://github.com/ChristopherBrix/vnncomp2023_benchmarks/tree/main/benchmarks/collins_rul_cnn
 
 Tools: 
 1. Alpha-beta-crown: https://github.com/Verified-Intelligence/alpha-beta-CROWN
 
-2. PyRat https://github.com/ChristopherBrix/vnncomp2023_results/tree/main/pyrat
+2. NeuralSAT https://github.com/dynaroars/neuralsat
 
 Saptamana 9
 
