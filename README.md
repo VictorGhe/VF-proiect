@@ -45,3 +45,5 @@ Saptamana 5-11 Febr
 7 Febr: Am dezvoltat un script Python pentru a rula verificarile in aceeasi ordine ca si cele de la VNNCOMP2023. (results.csv)
         Am rulat cu succes tool-ul NeuralSAT pe benchmark-ul collins_rul_cnn.
         Am rulat alpha-beta-crown, din nou, cu succes pe benchmark-ul Collins Rul Cnn, rezultatele fiind in aceeasi ordine ca si cele de la VNNCOMP2023.
+
+8 Febr: Am analizat si comparat rezultatele obtinute cu cele din competitie. Rezultatul privind satisfiabilitatea corespunde in intregime.
