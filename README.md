@@ -41,6 +41,7 @@ Saptamana 5-11 Febr
 
 6 Febr: Am esuat instalarea NeuralSAT pe arhitectura ARM, dar am reusit intalarea pe un laptop alternativ. S-a rulat primul onnx si vnnlib de test, rezultat cu succes.
         Am pastrat dependinetele de instalare de la alpha-beta-crown si am rulat noul benchmark Collins_Rul_Cnn folosind flag-ul --device CPU, rularea fiind fara probleme.
+        
 7 Febr: Am dezvoltat un script Python pentru a rula verificarile in aceeasi ordine ca si cele de la VNNCOMP2023. (results.csv)
         Am rulat cu succes tool-ul NeuralSAT pe benchmark-ul collins_rul_cnn.
         Am rulat alpha-beta-crown, din nou, cu succes pe benchmark-ul Collins Rul Cnn, rezultatele fiind in aceeasi ordine ca si cele de la VNNCOMP2023.
