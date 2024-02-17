@@ -55,22 +55,3 @@ If conflicts arise, **NeuralSAT** determines the assignment decisions causing th
 - employ multiple adversarial attack techniques for fast counterexamples (i.e., `sat`) discovery
 </details>
 
-
-
-## INSTALLATION and USAGE
-- see [INSTALL.md](./INSTALL.md)
-
-
-## People
-- Hai Duong (GMU, main developer)
-- Linhan Li (GMU)
-- Dong Xu (UVA)
-- [ThanhVu Nguyen](https://dynaroars.github.io/people/nguyenthanhvuh/) (GMU)
-- [Matthew Dwyer](https://matthewbdwyer.github.io/) (UVA)
-
-
-## :page_with_curl: Publications
-- Hai Duong, Linhan Li, ThanhVu Nguyen, Matthew Dwyer, [**A DPLL(T) Framework for Verifying Deep Neural Networks**](https://arxiv.org/pdf/2307.10266.pdf), Arxiv, 2023
-
-## Acknowledgements
-The *NeuralSAT* research is partially supported by grants from NSF ([2238133](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2238133)) and an Amazon Research Award.
